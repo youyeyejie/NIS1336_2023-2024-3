@@ -2,7 +2,7 @@
 
 #ifndef TYPES_H
 #define TYPES_H
-#include <time.h>
+#include <ctime>
 #include <pthread.h>
 
 //任务优先级:1.高 2.中 3.低
@@ -22,7 +22,7 @@ struct Task
     Priority prio;  //任务优先级
     Category cat;   //类别
     time_t start_time;  //任务启动时间
-    time_t rem_time; //任务提醒时间
+    time_t remind_time; //任务提醒时间
     string detail;   //任务详细信息
 };
 
