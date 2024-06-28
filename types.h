@@ -18,22 +18,22 @@ enum Category{
 struct Task
 {
     int id; 
-    char name[32];
-    time_t start_time;  //任务启动时间
+    string name;
     Priority prio;  //任务优先级
     Category cat;   //类别
-    time_t rem; //reminder, 提醒时间
-    char detail[256];   //任务详细信息
+    time_t start_time;  //任务启动时间
+    time_t rem_time; //任务提醒时间
+    string detail;   //任务详细信息
 };
 
 struct User
 {
-    static int uid; // user_id
+    static int uid; 
     string username;
-    string password; // hash
+    string password; 
 };
 
-struct Thread_Arg
+struct ThreadInfo
 {
     User* user;
     pthread_mutex_t* mutex;
