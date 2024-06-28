@@ -1,9 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <iomanip>
 #include <string>
-#include <cstring>
 #include <functional>
 #include "Account.h"
 
@@ -98,8 +96,8 @@ User getUser(const string& username, const string& password, const string& Accou
             if (name == username && storedPassword == password) {
 
                 user.uid = stoi(uid);
-                strcpy(user.username,name.c_str());
-                strcpy(user.password,password.c_str());
+                user.username = name;
+                user.password = password;
                 file.close();
                 return user; 
             }
