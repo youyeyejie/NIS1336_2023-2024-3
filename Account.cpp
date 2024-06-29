@@ -247,14 +247,23 @@ bool Account::regist(const string& input_username, const string& input_pwd)
     }
 
     // write
-    writeUser(NewUser, filename);
+    if (writeUser(NewUser, filename) == false)
+    {
+        return false;
+    }
 
     // close
     fclose(file);
 
     // create user file
     string user_file = USER_DIR + input_username + ".txt";
-    ofstream ufile(user_file);
+    ofstream userFile(user_file);
+    if (!userFile)
+    {
+        cout << "User file cannot open!" << endl;
+        return false;
+    }
+    userFile.close();
     cout << "Account created successfully!" << endl;
 
     return true;

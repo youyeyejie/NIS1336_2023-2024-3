@@ -1,9 +1,10 @@
-//枚举类型定义及类定义
-
 #ifndef TYPES_H
 #define TYPES_H
 #include <ctime>
+#include <string> 
 #include <pthread.h>
+
+using namespace std;
 
 //任务优先级:1.高 2.中 3.低
 enum Priority{
@@ -24,7 +25,7 @@ struct Task
     time_t start_time;  //任务启动时间
     time_t remind_time; //任务提醒时间
     string detail;   //任务详细信息
-};
+}; 
 
 struct User
 {
