@@ -108,6 +108,12 @@ string convertTimeToString(time_t time) {
     return ss.str();
 }
 
+//默认提醒时间为下周
+string getDefaultRemindTime(time_t time) {
+    time_t nextWeek = time + 7 * 24 * 60 * 60;
+    return convertTimeToString(nextWeek);
+}
+
 //获取下一个ID
 int getNextId(vector<Task> tasks) {
     if (tasks.empty()) 

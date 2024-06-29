@@ -1,7 +1,7 @@
 #ifndef TYPES_H
 #define TYPES_H
 #include <ctime>
-#include <cstring> 
+#include <string> 
 #include <pthread.h>
 
 using namespace std;

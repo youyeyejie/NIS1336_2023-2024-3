@@ -16,12 +16,16 @@ Category convertStringToCategory(const string& categoryStr);
 //string转换时间
 time_t convertStringToTime(const string& timeStr);
 
+
 //优先级转换为string
 string convertPriorityToString(Priority priority);
 //类别转换为string
 string convertCategoryToString(Category category);
 //时间转换为string
 string convertTimeToString(time_t time);
+//默认提醒时间为下周
+string getDefaultRemindTime(time_t time);
+
 
 //获取下一个ID
 int getNextId(vector<Task> tasks);
