@@ -12,7 +12,7 @@
 using namespace std;
 
 //string转换优先级
-Priority convertToPriority(const string& priorityStr) {
+Priority convertStringToPriority(const string& priorityStr) {
     if (priorityStr == "HIGH") 
     {
         return HIGH;
@@ -32,7 +32,7 @@ Priority convertToPriority(const string& priorityStr) {
 }
 
 //string转换类别
-Category convertToCategory(const string& categoryStr) {
+Category convertStringToCategory(const string& categoryStr) {
     if (categoryStr == "STUDY") 
     {
         return STUDY;
@@ -52,7 +52,7 @@ Category convertToCategory(const string& categoryStr) {
 }
 
 //string转换时间
-time_t convertToTime(const string& timeStr) {
+time_t convertStringToTime(const string& timeStr) {
     // timeStr:YYYY-MM-DD HH:MM:SS
     tm time = {};
     istringstream iss(timeStr);
@@ -241,69 +241,33 @@ vector<Task> loadTaskFromFile(const User* user) {
     fcntl(fd, F_SETLKW, &fl);
     //end lock
 
+    //open file
     ifstream file(filename);
     if (!file) {
-        // should not happen
-        printf("Failed to open task file!\n");
-        return;
+        cout << "Failed to open task file for loading!" << endl;
+        return tasks;
     }
-
+    
+    //read file
     string line;
     while (getline(file, line)) {
         istringstream iss(line);
-        string idStr, name, sTimeStr, prioStr, catStr, remind_timeStr, detail;
+        string idStr, name, start_TimeStr, prioStr, catStr, remind_timeStr, detail;
         
-        if (getline(iss, idStr, ','))
-        {
-            // id
-            int id = stoi(idStr);
-            // name
-            if (getline(iss >> ws, name, ','))
-            {
-                // start_time
-                if (getline(iss >> ws, sTimeStr, ','))
-                {
-                    time_t start_time = convertToTime(sTimeStr);
-
-                    // prio
-                    if (getline(iss >> ws, prioStr, ','))
-                    {
-                        Priority prio = convertToPriority(prioStr);
-
-                        // category
-                        if (getline(iss >> ws, catStr, ','))
-                        {
-                            Category cat = convertToCategory(catStr);
-
-                            // remind_time
-                            if (getline(iss >> ws, remind_timeStr, ','))
-                            {
-                                time_t remind_time = convertToTime(remind_timeStr);
-
-                                // detail
-                                if (getline(iss >> ws, detail))
-                                {
-                                    // new_task
-                                    Task task;
-                                    task.id = id;
-                                    strncpy(task.name, name.c_str(), sizeof(task.name) - 1);
-                                    task.start_time = start_time;
-                                    task.prio = prio;
-                                    task.cat = cat;
-                                    task.remind_time = remind_time;
-                                    strncpy(task.detail, detail.c_str(), sizeof(task.detail) - 1);
-
-                                    tasks.push_back(task);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+        if (getline(iss, idStr, ',') && getline(iss, name, ',') && getline(iss, start_TimeStr, ',') && getline(iss, prioStr, ',') && getline(iss, catStr, ',') && getline(iss, remind_timeStr, ',') && getline(iss, detail)) {
+            Task task;
+            task.id = stoi(idStr);
+            task.name = name;
+            task.start_time = convertStringToTime(start_TimeStr);
+            task.prio = convertStringToPriority(prioStr);
+            task.cat = convertStringToCategory(catStr);
+            task.remind_time = convertStringToTime(remind_timeStr);
+            task.detail = detail;
+            tasks.push_back(task);
         }
-
     }
-
+    
+    //close file
     file.close();
 
     //release lock
@@ -313,10 +277,8 @@ vector<Task> loadTaskFromFile(const User* user) {
     return tasks;
 }
 
-
-void saveTask(const vector<Task>& tasks, const User* user){
-
-    string user->username(user->username);
+//保存任务
+void saveTask2File(const vector<Task>& tasks, const User* user){
     string filename = USER_DIR + user->username + ".txt" ;
 
     //begin lock
@@ -337,12 +299,14 @@ void saveTask(const vector<Task>& tasks, const User* user){
     fcntl(fd, F_SETLKW, &fl);
     //end lock
 
+    //open file
     ofstream file(filename);
     if (!file) {
-        printf("Failed to open task file for saving!\n");
+        cout << "Failed to open task file for saving!" << endl;
         return;
     }
 
+    //write file
     for (const Task& task : tasks) {
         file << task.id << ","
              << task.name << ","
@@ -353,12 +317,12 @@ void saveTask(const vector<Task>& tasks, const User* user){
              << task.detail << endl;
     }
 
+    //close file
     file.close();
+  
     //release lock
     fl.l_type = F_UNLCK;
     fcntl(fd, F_SETLKW, &fl);
     close(fd);
-
-
 }
 

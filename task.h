@@ -10,11 +10,11 @@ using namespace std;
 extern const string USER_DIR;
 
 //string转换优先级
-Priority convertToPriority(const string& priorityStr);
+Priority convertStringToPriority(const string& priorityStr);
 //string转换类别
-Category convertToCategory(const string& categoryStr);
+Category convertStringToCategory(const string& categoryStr);
 //string转换时间
-time_t convertToTime(const string& timeStr);
+time_t convertStringToTime(const string& timeStr);
 
 //优先级转换为string
 string convertPriorityToString(Priority priority);
