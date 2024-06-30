@@ -3,7 +3,7 @@
 #include <sstream>
 #include <iomanip>
 #include <vector>
-#include <cstring>
+#include <string>
 #include <regex>
 #include <getopt.h>
 #include <unistd.h>
@@ -18,6 +18,7 @@ int main(int argc, char * argv[]){
     ./cli displaytask -u username -p password -k kindOfDisplay
     ./cli addtask -u username -p password -n name -p prio -c cat -s start_time -r remind_time -d detail 
     ./cli deltask -u username -p password -i id
+    ./cli changetask -u username -p password -i id -n name -o prio -c cat -r rem -d detail -s start
     ./cli login -u username -p password
     ./cli reg -u username -p password
     ./cli passwd -u username -p password -n newpassword
@@ -49,8 +50,11 @@ int main(int argc, char * argv[]){
     else if(strcmp(argv[1], "check") == 0){
         checkTask(argc, argv);
     }
+    else if(strcmp(argv[1], "changeelement") == 0){
+        changeTask(argc, argv);
+    }
     else{
-        cmdError();
+        cout<<"Unknown command! Use help to show usage!\n";
     }
     return 0;
 }
@@ -63,7 +67,7 @@ void displayTask(int argc, char * argv[]){
     */
     string username, password, kindOfDisplay;
     Account account("Account.txt");
-    int optret;
+    char optret;
 
     //getopt
     while((optret = getopt(argc, argv, "u:p:k:")) != -1){
@@ -181,7 +185,7 @@ void addTask(int argc, char * argv[]){
     //login
     User user = account.login(username, password);
     if(user.uid == -1){
-        printf("Incorrect user name or password. Please check your input.\n");
+        cout<<"Incorrect user name or password. Please check your input.\n";
         exit(-1);
     }
 
@@ -206,7 +210,7 @@ void addTask(int argc, char * argv[]){
         }
     }
     if(flag){
-        printf("This task name is unavailable!\n");
+        cout<<"This task name is unavailable!\n";
         exit(-1);
     }   
     new_task.name = name;
@@ -236,9 +240,20 @@ void addTask(int argc, char * argv[]){
             cout << "Start time cannot be earlier than current time!" << endl;
             exit(-1);
         }
+        bool flag = false;
+   		for(int i=0; i<tasklist.size(); ++i){
+        	if(tasklist[i].start_time == start_time){
+            	flag = true;
+            	break;
+        	}
+    	}
+    	if(flag){
+        	cout<<"This start time is already occupied!\n";
+        	exit(-1);
+    	} 
         new_task.start_time = convertStringToTime(start_time);
     }
-
+	
     //replace remind time
     if (!remind_time.empty()) {
         if (!checkDateFormat(remind_time)){
@@ -251,6 +266,7 @@ void addTask(int argc, char * argv[]){
         }
         new_task.remind_time = convertStringToTime(remind_time);
     }
+    
 
     //add new task to tasklist
     tasklist.push_back(new_task);
@@ -260,23 +276,24 @@ void addTask(int argc, char * argv[]){
 }
 
 
-//todo
 
-
-
-
-void altTask(int argc, char * argv[]){
+void changeTask(int argc, char * argv[]){
     /*
-    ./cli alt -u username -p password -i id -n name -o prio -c cat -r remind_time -d detail -s start_time
+    ./cli changetask -u username -p password -i id -n name -o prio -c cat -r remind_time -d detail -s start_time
     */
 
     Account account("Account.txt");
 
     //login info
-    string username, password;
-    int id;
-    string name, prio, cat, start_time, remind_time, detail;
-    int optret;
+    string username=NULL, password=NULL;
+    int id=0;
+    string name=NULL;
+    string detail = "No detail";
+    string prio = "LOW";
+    string cat = "NONE";
+    string start_time = convertTimeToString(time(NULL));
+    string remind_time = getDefaultRemindTime(time(NULL));
+    char optret;
     
     while((optret = getopt(argc, argv, "u:p:i:n:o:c:r:d:s:"))!=-1){
         switch (optret)
@@ -298,15 +315,15 @@ void altTask(int argc, char * argv[]){
             break;
 
         case 'o':
-            c_prio = optarg;
+            prio = optarg;
             break;
 
         case 'c':
-            c_cat = optarg;
+            cat = optarg;
             break;
 
         case 'r':
-            c_rem = optarg;
+            remind_time = optarg;
             break;
 
         case 'd':
@@ -314,7 +331,7 @@ void altTask(int argc, char * argv[]){
             break;
 
         case 's':
-            c_stime = optarg;
+            start_time = optarg;
             break;
         
         default:
@@ -323,133 +340,132 @@ void altTask(int argc, char * argv[]){
     }
 
     //check login info
-    if(username == NULL || password == NULL){
-        printf("Too few arguments!\n");
+    if(username.empty() || password.empty()){
+        cout<<"Too few arguments!\n";
         exit(-1);
     }
 
     User user = account.login(username, password);
-    if(user.id == 0){
-        printf("Incorrect user name or password. Please check your input.\n");
+    if(user.uid == -1){
+        cout<<"Incorrect user name or password. Please check your input.\n";
         exit(-1);
     }
 
-    std::vector<Task> tasklist;
-    loadTask(tasklist, &user);
+    vector<Task> tasklist=loadTaskFromFile(&user);
 
-    std::vector<Task>::iterator target_it;
-    bool found = false;
-    for(target_it = tasklist.begin(); target_it != tasklist.end(); ++target_it){
-        if(target_it->id == id){
-            found = true;
+    int i;
+    bool flag = false;
+    for(i=0; i<tasklist.size(); ++i){
+        if(tasklist[i].id == id){
+            flag = true;
             break;
         }
     }
 
     if(!found){
-        printf("Cannot found task %d.\n", id);
+        cout<<"Cannot found task "<<id<<endl;
         exit(-1);
     }
 
     //check name
-    if(name){
+    if(!name.empty()){
         bool name_existed = false;
-        for(auto it = tasklist.begin(); it != tasklist.end(); ++it){
-            if(!strcmp(it->name, name)){
-                name_existed = true;
-                break;
-            }
-        }
+        for(i=0; i<tasklist.size(); ++i){
+        	if(tasklist[i].name == name){
+        	    name_existed = true;
+        	    break;
+        	}
+   		}
 
         if(name_existed){
-            printf("Task name already exists!\n");
+            cout<<"Task name already exists!\n";
             exit(-1);
         }
 
-        strcpy(target_it->name, name);
+        tasklist[i].name = name;;
         
     }
-    //check detail
-    if(detail){
-        strcpy(target_it->detail, detail);
-    }
-    //check prio
-    if(c_prio){
-        std::string s_prio = c_prio;
-        target_it->prio = convertToPriority(s_prio);
-    }
-    //check category
-    if(c_cat){
-        std::string s_cat = c_cat;
-        target_it->cat = convertToCategory(s_cat);
+    //replace priority
+    if (!prio.empty()){
+        tasklist[i].prio = convertStringToPriority(prio);
     }
 
-    //check s_time and rem_time
+    //replace category
+    if (!cat.empty()){
+        tasklist[i].cat = convertStringToCategory(cat);
+    }
+
+    //replace detail
+    if (!detail.empty()){
+        tasklist[i].detail = detail;
+    }
+
+    //check start_time and remind_time
     time_t stime;
     time_t rtime;
-    if(c_stime){
-        std::string s_time_str = c_stime;
-        if(!checkDateFormat(s_time_str)){
-            printf("Time format error!\n");
+    if(!start_time.empty()){
+        string start_time_str = start_time;
+        if(!checkDateFormat(start_time_str)){
+            cout<<"Time format error!\n";
             exit(-1);
         }
-        tm s_time_tm = {};
-        std::istringstream ss(s_time_str);
-        ss >> std::get_time(&s_time_tm, "%Y-%m-%d,%T");
-        stime = mktime(&s_time_tm);
+        tm start_time_tm = {};
+        istringstream ss(start_time_str);
+        ss >> get_time(&start_time_tm, "%Y-%m-%d,%T");
+        stime = mktime(&start_time_tm);
     }else{
-        stime = target_it->s_time;
+        stime = tasklist[i].start_time;
     }
 
-    if(c_rem){
-        std::string r_time_str = c_rem;
-        if(!checkDateFormat(r_time_str)){
-            printf("Time format error!\n");
+    if(!remind_time.empty()){
+        string remind_time_str = remind_time;
+        if(!checkDateFormat(remind_time_str)){
+            cout<<"Time format error!\n";
             exit(-1);
         }
-        tm r_time_tm = {};
-        std::istringstream sr(r_time_str);
-        sr >> std::get_time(&r_time_tm, "%Y-%m-%d,%T");
-        rtime = mktime(&r_time_tm);
+        tm remind_time_tm = {};
+        istringstream sr(remind_time_str);
+        sr >> get_time(&remind_time_tm, "%Y-%m-%d,%T");
+        rtime = mktime(&remind_time_tm);
     }else{
-        rtime = target_it->remind_time;
+        rtime = tasklist[i].remind_time;
     }
 
     //validation
-    time_t cur;
-    time(&cur);
+    time_t current;
+    time(&current);
 
-    if(cur > stime){
-        printf("Cannot use past time!\n");
+    if(current > stime){
+        cout<<"Cannot use past time!\n";
         exit(-1);
     }
 
     if(stime < rtime){
-        printf("Start time cannot be earlier than remind time.\n");
+        cout<<"Start time cannot be earlier than remind time.\n";
         exit(-1);
     }
 
-    for(auto it = tasklist.begin(); it != tasklist.end();++it){
-        if( it->id == id ) continue;
-        if(it->s_time == stime){
-            printf("This start_time time is occupied!\n");
+    for(int j=0; j<tasklist.size(); ++j){
+        if( tasklist[j].id == id ) continue;
+        if(tasklist[j].start_time == stime){
+            cout<<"This start_time time is occupied!\n";
             exit(-1);
         }
     }
 
-    target_it->remind_time = rtime;
-    target_it->s_time = stime;
+    tasklist[i].remind_time = rtime;
+    tasklist[i].start_time = stime;
 
-    saveTask(tasklist, &user);
-    printf("Task %d is successfully modified\n", id );
+    saveTask2File(tasklist, &user);
+    cout<<"Task "<<id<<" is successfully modified\n";
 
 
 }
 
 void delTask(int argc, char * argv[]){
-    char* username = NULL;
-    char* password = NULL;
-    int id;
+    string username = NULL;
+    string password = NULL;
+    int id=0;
     char optret;
 
     Account account("Account.txt");
@@ -474,20 +490,19 @@ void delTask(int argc, char * argv[]){
     }
 
     //check user auth
-    if(username == NULL || password == NULL){
-        printf("Too few arguments!\n");
+    if(username.empty() || password.empty()){
+        cout<<"Too few arguments!\n";
         exit(-1);
     }
 
     User user = account.login(username, password);
 
     if(user.id == 0){
-        printf("Incorrect user name or password. Please check your input.\n");
+        cout<<"Incorrect user name or password. Please check your input.\n";
         exit(-1);
     }
 
-    std::vector<Task> tasklist;
-    loadTask(tasklist, &user);
+    vector<Task> tasklist=loadTaskFromFile(&user);
     bool flag = false;
 
     for(auto it = tasklist.begin(); it != tasklist.end(); ++it){
@@ -499,53 +514,53 @@ void delTask(int argc, char * argv[]){
     }
 
     if(flag){
-        saveTask(tasklist, &user);
-        printf("Delete successfully!\n");
+        saveTask2File(tasklist, &user);
+        cout<<"Delete successfully!\n";
     }else{
-        printf("Cannot find this task.\n");
+        cout<<"Cannot find this task.\n";
     }
     
 }
 
-void userLogin(int argc, char* argv[]){
-    char* username = NULL;
-    char* password = NULL;
-    Account account("Account.txt");
-
-    char optret;
-    while((optret = getopt(argc,argv,"u:p:"))!=-1){
-        switch(optret){
-            case 'u':
-            username = optarg;
-            break;
-
-        case 'p':
-            password = optarg;
-            break;
-
-        default:
-            break;
-        }
-    }
-
-    if(username == NULL || password == NULL){
-        printf("Too few arguments!\n");
-        exit(-1);
-    }
-
-    User user = account.login(username, password);
-
-    if(user.id == 0){
-        printf("Incorrect user name or password. Please check your input.\n");
-        exit(-1);
-    }else{
-        printf("Successfully loged in as %s.\n", user.username);
-    }
-}
+//void userLogin(int argc, char* argv[]){
+//    char* username = NULL;
+//    char* password = NULL;
+//    Account account("Account.txt");
+//
+//    char optret;
+//    while((optret = getopt(argc,argv,"u:p:"))!=-1){
+//        switch(optret){
+//            case 'u':
+//            username = optarg;
+//            break;
+//
+//        case 'p':
+//            password = optarg;
+//            break;
+//
+//        default:
+//            break;
+//        }
+//    }
+//
+//    if(username == NULL || password == NULL){
+//        printf("Too few arguments!\n");
+//        exit(-1);
+//    }
+//
+//    User user = account.login(username, password);
+//
+//    if(user.id == 0){
+//        printf("Incorrect user name or password. Please check your input.\n");
+//        exit(-1);
+//    }else{
+//        printf("Successfully loged in as %s.\n", user.username);
+//    }
+//}
 
 void userRegister(int argc, char* argv[]){
-    char* username = NULL;
-    char* password = NULL;
+    string username = NULL;
+    string password = NULL;
     Account account("Account.txt");
 
     char optret;
@@ -564,16 +579,16 @@ void userRegister(int argc, char* argv[]){
         }
     }
 
-    if(username == NULL || password == NULL){
-        printf("Too few arguments!\n");
+    if(username.empty()|| password.empty()){
+        cout<<"Too few arguments!\n";
         exit(-1);
     }
 
     bool flag = account.registerUser(username, password);
     if(flag){
-        printf("Registration succeeded!\n");
+        cout<<"Registration succeeded!\n";
     }else{
-        printf("Registration failed!\n");
+        cout<<"Registration failed!\n";
         exit(-1);
     }
 }
@@ -604,90 +619,90 @@ void changePasswd(int argc, char* argv[]){
         }
     }
 
-    if(username == NULL || password == NULL || new_password == NULL){
-        printf("Too few arguments!\n");
+    if(username.empty()|| password.empty()|| new_password.empty()){
+        cout<<"Too few arguments!\n";
         exit(-1);
     }
 
     bool flag = account.changePassword(username, password, new_password);
 
     if(flag){
-        printf("Changed password successfully!\n");
+        cout<<"Changed password successfully!\n";
     }else{
-        printf("Change password failed!\n");
+        cout<<"Change password failed!\n";
         exit(-1);
     }
 }
 
-void checkTask(int argc, char* argv[]){
-    char* username = NULL;
-    char* password = NULL;
-    Account account("Account.txt");
+//void checkTask(int argc, char* argv[]){
+//    char* username = NULL;
+//    char* password = NULL;
+//    Account account("Account.txt");
+//
+//    char optret;
+//    while((optret = getopt(argc,argv,"u:p:"))!=-1){
+//        switch(optret){
+//            case 'u':
+//            username = optarg;
+//            break;
+//
+//        case 'p':
+//            password = optarg;
+//            break;
+//
+//        default:
+//            break;
+//        }
+//    }
+//
+//    if(username == NULL || password == NULL){
+//        printf("Too few arguments!\n");
+//        exit(-1);
+//    }
+//
+//    User user = account.login(username, password);
+//
+//    if(user.id == 0){
+//        printf("Incorrect user name or password. Please check your input.\n");
+//        exit(-1);
+//    }
+//
+//    //check task begin
+//    vector<Task> tasklist;
+//    struct tm *current_time;
+//    struct tm *task_time;
+//    double difft = 0;
+//
+//    loadTask(tasklist, &user);
+//
+//    //get current time
+//    time_t timep;
+//    time(&timep);
+//    current_time = localtime(&timep);
+//
+//    //check arriving tasks
+//    for(int i = 0; i<tasklist.size(); ++i){
+//            
+//        task_time = localtime(&(tasklist[i].remind_time));
+//            
+//        if(task_time->tm_year != current_time->tm_year) continue;
+//        if(task_time->tm_mon != current_time->tm_mon) continue;
+//        if(task_time->tm_mday != current_time->tm_mday) continue;
+//        // day match if here
+//        // difft = difftime(tasklist[i].remind_time, timep);
+//
+//        if(timep > tasklist[i].remind_time && timep < tasklist[i].s_time){
+//            printf("Task %d %s is arriving: %s.\n", 
+//            tasklist[i].id, tasklist[i].name, tasklist[i].detail);
+//        }
+//
+//    }
+//
+//}
 
-    char optret;
-    while((optret = getopt(argc,argv,"u:p:"))!=-1){
-        switch(optret){
-            case 'u':
-            username = optarg;
-            break;
-
-        case 'p':
-            password = optarg;
-            break;
-
-        default:
-            break;
-        }
-    }
-
-    if(username == NULL || password == NULL){
-        printf("Too few arguments!\n");
-        exit(-1);
-    }
-
-    User user = account.login(username, password);
-
-    if(user.id == 0){
-        printf("Incorrect user name or password. Please check your input.\n");
-        exit(-1);
-    }
-
-    //check task begin
-    std::vector<Task> tasklist;
-    struct tm *current_time;
-    struct tm *task_time;
-    double difft = 0;
-
-    loadTask(tasklist, &user);
-
-    //get current time
-    time_t timep;
-    time(&timep);
-    current_time = localtime(&timep);
-
-    //check arriving tasks
-    for(int i = 0; i<tasklist.size(); ++i){
-            
-        task_time = localtime(&(tasklist[i].remind_time));
-            
-        if(task_time->tm_year != current_time->tm_year) continue;
-        if(task_time->tm_mon != current_time->tm_mon) continue;
-        if(task_time->tm_mday != current_time->tm_mday) continue;
-        // day match if here
-        // difft = difftime(tasklist[i].remind_time, timep);
-
-        if(timep > tasklist[i].remind_time && timep < tasklist[i].s_time){
-            printf("Task %d %s is arriving: %s.\n", 
-            tasklist[i].id, tasklist[i].name, tasklist[i].detail);
-        }
-
-    }
-
-}
-
-void cmdError(){
-    printf("Unknown command! Use help to show usage!\n");
-}
+// void cmdError(){
+//     cout<<"Unknown command! Use help to show usage!\n";
+// }
 
 void displayHelp(){
     cout << "Usage: ./cli [command] [options]\n";
@@ -695,6 +710,7 @@ void displayHelp(){
     cout << "displaytask -u username -p password -k kindOfDisplay(id/starttime/remindtime/priority/category)\n";
     cout << "addtask -u username -p password -n name -p prio -c cat -s start_time -r remind_time -d detail\n";
     cout << "deltask -u username -p password -i id\n";
+    cout << "changetask -u username -p password -i id -n name -o prio -c cat -r rem -d detail -s start\n";
     cout << "login -u username -p password\n";
     cout << "reg -u username -p password\n";
     cout << "passwd -u username -p password -n newpassword\n";
@@ -703,10 +719,10 @@ void displayHelp(){
 }
 
 
-bool checkDateFormat(const std::string& str) {
+bool checkDateFormat(const string& str) {
     // 定义正则表达式
-    std::regex re(R"(^\d{4}-\d{2}-\d{2},\d{2}:\d{2}:\d{2}$)");
+    regex re(R"(^\d{4}-\d{2}-\d{2},\d{2}:\d{2}:\d{2}$)");
 
     // 判断是否匹配正则表达式
-    return std::regex_match(str, re);
+    return regex_match(str, re);
 }
