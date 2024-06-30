@@ -41,6 +41,6 @@ struct ThreadInfo
     bool running;
 };
 
-int User::uid = 0;
+
 
 #endif

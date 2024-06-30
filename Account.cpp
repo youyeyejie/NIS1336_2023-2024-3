@@ -7,6 +7,7 @@
 using namespace std;
 
 extern const string USER_DIR;
+int User::uid = 0;
 
 Account::Account(const string& filename):filename(filename)
 {

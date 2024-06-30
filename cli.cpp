@@ -63,7 +63,8 @@ int main(int argc, char * argv[]){
 }
 
 void displayHelp(){
-    cout << "Usage: ./cli [command] [options]" << endl;
+    cout << "Usage: " << endl;
+    cout << "./cli [command] [options]" << endl;
     cout << "Commands:" << endl;
     cout << "displaytask -u username -p password -k kindOfDisplay(id/starttime/remindtime/priority/category)" << endl;
     cout << "addtask -u username -p password -n name -p prio -c cat -s start_time -r remind_time -d detail" << endl;
