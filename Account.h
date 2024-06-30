@@ -13,8 +13,6 @@ class Account
     friend string hashString(const string& input);
     //检查用户名是否存在
     friend bool isUserExists(const string& username, const string& Account_File);
-    //统计用户数量
-    friend int countUser(const string& Account_File);
     //获取用户信息,成功返回用户信息，失败返回uid为-1的用户信息
     friend User getUser(const string& username, const string& password, const string& Account_File);
     //写入用户信息,成功返回true，失败返回false

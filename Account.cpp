@@ -53,26 +53,6 @@ bool isUserExists(const string& username, const string& Account_File) {
     return false;// 用户名不存在
 }
 
-//统计用户数量
-int countUser(const string& Account_File) {
-    ifstream file(Account_File);
-    if (!file) {
-        cout << "File cannot open!" << endl;
-        return 0;
-    }
-
-    int Count = 0;
-    string line;
-    while (getline(file, line)) {
-        if (!line.empty()) {
-            Count++;
-        }
-    }
-
-    file.close();
-    return Count;
-}
-
 //获取用户信息
 User getUser(const string& username, const string& password, const string& Account_File) {
 
