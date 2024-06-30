@@ -3,6 +3,7 @@
 #include <sstream>
 #include <iomanip>
 #include <algorithm>
+#include <regex>
 #include <unistd.h>
 #include <fcntl.h> 
 #include <sys/file.h> 
@@ -118,7 +119,7 @@ string getDefaultRemindTime(time_t time) {
 int getNextId(vector<Task> tasks) {
     if (tasks.empty()) 
     {
-        return 1;
+        return 0;
     } 
     else 
     {
@@ -132,6 +133,14 @@ int getNextId(vector<Task> tasks) {
         }
         return maxId + 1;
     }
+}
+
+//检查日期格式
+bool checkDateFormat(const string& str) {
+    // define regular expression
+    regex re(R"(^\d{4}-\d{2}-\d{2},\d{2}:\d{2}:\d{2}$)");
+    // judge
+    return regex_match(str, re);
 }
 
 //按开始时间打印任务

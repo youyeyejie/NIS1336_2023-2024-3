@@ -230,7 +230,7 @@ int getUid(const string& Account_File) {
 }
 
 //注册账号
-bool Account::regist(const string& input_username, const string& input_pwd)
+bool Account::newAccount(const string& input_username, const string& input_pwd)
 {
     //new user
     User NewUser;
@@ -311,10 +311,10 @@ bool Account::changePassword(const string& input_username, const string& OldPwd,
 }
 
 //删除账号
-bool Account::deleteAccount(const string& input_username, const string& input_pwd)
+bool Account::deleteAccount(const string& input_username, const string& input_password)
 {
     //hash
-    string hashpwd = hashString(input_pwd);
+    string hashpwd = hashString(input_password);
 
     // Verify
     User user = getUser(input_username, hashpwd, filename);

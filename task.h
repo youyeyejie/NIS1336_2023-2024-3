@@ -29,6 +29,8 @@ string getDefaultRemindTime(time_t time);
 
 //获取下一个ID
 int getNextId(vector<Task> tasks);
+//检查日期格式
+bool checkDateFormat(const string& str);
 
 //按开始时间打印任务
 void displayTaskByStartTime(const vector<Task>& tasks);
@@ -38,8 +40,9 @@ void displayTaskByPriority(const vector<Task>& tasks);
 void displayTaskByCategory(const vector<Task>& tasks);
 //按ID打印任务
 void displayTaskById(const vector<Task>& tasks);
-//按提醒时间
+//按提醒时间打印任务
 void displayTaskByRemindTime(const vector<Task>& tasks);
+
 //加载任务
 vector<Task> loadTaskFromFile(const User* user);
 //保存任务

@@ -30,7 +30,7 @@ public:
     Account(const string& filename);
     ~Account();
     //注册账号，成功返回true，失败返回false
-    bool regist(const string& input_username, const string& input_password);
+    bool newAccount(const string& input_username, const string& input_password);
     //登录，成功返回用户信息，失败返回空
     User login(const string& input_username, const string& input_password);
     //修改密码，成功返回true，失败返回false
