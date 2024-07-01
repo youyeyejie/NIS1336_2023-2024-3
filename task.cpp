@@ -1,13 +1,3 @@
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <iomanip>
-#include <algorithm>
-#include <regex>
-#include <unistd.h>
-#include <fcntl.h> 
-#include <sys/file.h> 
-#include <sys/types.h> // Add this line to include the appropriate header file for 'fcntl'
 #include "task.h"
 
 using namespace std;
@@ -48,16 +38,16 @@ Category convertStringToCategory(const string& categoryStr) {
     } 
     else 
     {
-        return STUDY;//默认
+        return NONE;//默认
     }
 }
 
 //string转换时间
 time_t convertStringToTime(const string& timeStr) {
-    // timeStr:YYYY-MM-DD HH:MM:SS
+    // timeStr:YYYY-MM-DD/HH:MM:SS
     tm time = {};
     istringstream iss(timeStr);
-    iss >> get_time(&time, "%Y-%m-%d %H:%M:%S");
+    iss >> get_time(&time, "%Y-%m-%d/%H:%M:%S");
     return mktime(&time);
 }
 
@@ -105,13 +95,13 @@ string convertCategoryToString(Category category) {
 string convertTimeToString(time_t time) {
     struct tm* timeinfo = localtime(&time);
     stringstream ss;
-    ss << put_time(timeinfo, "%Y-%m-%d %H:%M:%S");
+    ss << put_time(timeinfo, "%Y-%m-%d/%H:%M:%S");
     return ss.str();
 }
 
-//默认提醒时间为下周
+//默认提醒时间为一天前
 string getDefaultRemindTime(time_t time) {
-    time_t nextWeek = time + 7 * 24 * 60 * 60;
+    time_t nextWeek = time - 24 * 60 * 60;
     return convertTimeToString(nextWeek);
 }
 
@@ -138,11 +128,39 @@ int getNextId(vector<Task> tasks) {
 //检查日期格式
 bool checkDateFormat(const string& str) {
     // define regular expression
-    regex re(R"(^\d{4}-\d{2}-\d{2},\d{2}:\d{2}:\d{2}$)");
+    regex re(R"(^\d{4}-\d{2}-\d{2}/\d{2}:\d{2}:\d{2}$)");
     // judge
-    return regex_match(str, re);
+    if(!regex_match(str, re))return false;
+    
+    tm time = {};
+    istringstream iss(str);
+    iss >> get_time(&time, "%Y-%m-%d/%H:%M:%S");
+    time_t tm=mktime(&time);
+    if( tm==-1 || convertTimeToString(tm)!=str ) return false;
+    return true;
 }
 
+//打印单个任务
+void displaySingleTask(const Task& task) {
+    cout << setw(2) << task.id << "\t";
+    cout << setw(12) << task.name << "\t";
+    cout << setw(24) << convertTimeToString(task.start_time) << "\t";
+    cout << setw(12) << convertPriorityToString(task.prio) << "\t";
+    cout << setw(16) << convertCategoryToString(task.cat) << "\t";
+    cout << setw(24) << convertTimeToString(task.remind_time) << "\t";
+    cout << task.detail << endl;
+}
+
+//打印表头
+void displayTaskTitle(){
+    cout << setw(2) << "ID" << "\t";
+    cout << setw(12) << "Name" << "\t";
+    cout << setw(24) << "Start Time" << "\t";
+    cout << setw(12) << "Priority" << "\t";
+    cout << setw(16) << "Category" << "\t";
+    cout << setw(24) << "Remind Time" << "\t";
+    cout << "Detail" << endl;
+}
 //按开始时间打印任务
 void displayTaskByStartTime(const vector<Task>& tasks) {
     vector<Task> clonetasks(tasks);
@@ -151,12 +169,10 @@ void displayTaskByStartTime(const vector<Task>& tasks) {
         return t1.start_time < t2.start_time;
     });
 
-    cout << "ID\tName\t\t\tStart Time\t\t\tPriority\tCategory\t\tRemind Time\t\tDetail" << endl;
+    displayTaskTitle();
     cout << "--------------------------------------------------------------------------------------------------------------------------------" << endl;
     for (const auto& task : clonetasks) {
-        cout << setw(2) << task.id << "\t" << setw(12) << task.name << "\t" << setw(24) << convertTimeToString(task.start_time) << "\t"
-             << setw(12) << convertPriorityToString(task.prio) << "\t" << setw(16) << convertCategoryToString(task.cat) << "\t"
-             << setw(24) << convertTimeToString(task.remind_time) << "\t" << task.detail << endl;
+        displaySingleTask(task);
     }
     cout << "--------------------------------------------------------------------------------------------------------------------------------" << endl;
 }
@@ -169,12 +185,10 @@ void displayTaskByPriority(const vector<Task>& tasks) {
         return t1.prio < t2.prio;
     });
 
-    cout << "ID\tName\t\t\tStart Time\t\t\tPriority\tCategory\t\tRemind Time\t\tDetail" << endl;
+    displayTaskTitle();
     cout << "--------------------------------------------------------------------------------------------------------------------------------" << endl;
     for (const auto& task : clonetasks) {
-        cout << setw(2) << task.id << "\t" << setw(12) << task.name << "\t" << setw(24) << convertTimeToString(task.start_time) << "\t"
-             << setw(12) << convertPriorityToString(task.prio) << "\t" << setw(16) << convertCategoryToString(task.cat) << "\t"
-             << setw(24) << convertTimeToString(task.remind_time) << "\t" << task.detail << endl;
+         displaySingleTask(task);
     }
     cout << "--------------------------------------------------------------------------------------------------------------------------------" << endl;
 }
@@ -187,12 +201,10 @@ void displayTaskByCategory(const vector<Task>& tasks) {
         return t1.cat < t2.cat;
     });
 
-    cout << "ID\tName\t\t\tStart Time\t\t\tPriority\tCategory\t\tRemind Time\t\tDetail" << endl;
+    displayTaskTitle();
     cout << "--------------------------------------------------------------------------------------------------------------------------------" << endl;
     for (const auto& task : clonetasks) {
-        cout << setw(2) << task.id << "\t" << setw(12) << task.name << "\t" << setw(24) << convertTimeToString(task.start_time) << "\t"
-             << setw(12) << convertPriorityToString(task.prio) << "\t" << setw(16) << convertCategoryToString(task.cat) << "\t"
-             << setw(24) << convertTimeToString(task.remind_time) << "\t" << task.detail << endl;
+         displaySingleTask(task);
     }
     cout << "--------------------------------------------------------------------------------------------------------------------------------" << endl;
 }
@@ -205,12 +217,10 @@ void displayTaskById(const vector<Task>& tasks) {
         return t1.id < t2.id;
     });
 
-    cout << "ID\tName\t\t\tStart Time\t\t\tPriority\tCategory\t\tRemind Time\t\tDetail" << endl;
+    displayTaskTitle();
     cout << "--------------------------------------------------------------------------------------------------------------------------------" << endl;
     for (const auto& task : clonetasks) {
-        cout << setw(2) << task.id << "\t" << setw(12) << task.name << "\t" << setw(24) << convertTimeToString(task.start_time) << "\t"
-             << setw(12) << convertPriorityToString(task.prio) << "\t" << setw(16) << convertCategoryToString(task.cat) << "\t"
-             << setw(24) << convertTimeToString(task.remind_time) << "\t" << task.detail << endl;
+         displaySingleTask(task);
     }
     cout << "--------------------------------------------------------------------------------------------------------------------------------" << endl;
 }
@@ -223,12 +233,10 @@ void displayTaskByRemindTime(const vector<Task>& tasks) {
         return t1.remind_time < t2.remind_time;
     });
 
-    cout << "ID\tName\t\t\tStart Time\t\t\tPriority\tCategory\t\tRemind Time\t\tDetail" << endl;
+    displayTaskTitle();
     cout << "--------------------------------------------------------------------------------------------------------------------------------" << endl;
     for (const auto& task : clonetasks) {
-        cout << setw(2) << task.id << "\t" << setw(12) << task.name << "\t" << setw(24) << convertTimeToString(task.start_time) << "\t"
-             << setw(12) << convertPriorityToString(task.prio) << "\t" << setw(16) << convertCategoryToString(task.cat) << "\t"
-             << setw(24) << convertTimeToString(task.remind_time) << "\t" << task.detail << endl;
+         displaySingleTask(task);
     }
     cout << "--------------------------------------------------------------------------------------------------------------------------------" << endl;
 }
@@ -236,14 +244,14 @@ void displayTaskByRemindTime(const vector<Task>& tasks) {
 //加载任务
 vector<Task> loadTaskFromFile(const User* user) {
     vector<Task> tasks;
-    string filename = USER_DIR + user->username + ".txt" ;
+    string filename = op + user->username + ed ;
 
     //begin lock
-    int fd = open((USER_DIR + user->username).c_str(), O_RDWR);
+    int fd = open(filename.c_str(), O_RDWR);
     if(fd == -1){
-        FILE* fp = fopen((USER_DIR + user->username).c_str(), "w");
+        FILE* fp = fopen(filename.c_str(), "w");
         fclose(fp);
-        fd = open((USER_DIR + user->username).c_str(), O_RDWR);
+        fd = open(filename.c_str(), O_RDWR);
     }
     
     struct flock fl;
@@ -294,14 +302,14 @@ vector<Task> loadTaskFromFile(const User* user) {
 
 //保存任务
 void saveTask2File(const vector<Task>& tasks, const User* user){
-    string filename = USER_DIR + user->username + ".txt" ;
+    string filename = op + user->username + ed ;
 
     //begin lock
-    int fd = open((USER_DIR + user->username).c_str(), O_RDWR);
+    int fd = open(filename.c_str(), O_RDWR);
     if(fd == -1){
-        FILE* fp = fopen((USER_DIR + user->username).c_str(), "w");
+        FILE* fp = fopen(filename.c_str(), "w");
         fclose(fp);
-        fd = open((USER_DIR + user->username).c_str(), O_RDWR);
+        fd = open(filename.c_str(), O_RDWR);
     }
     
     struct flock fl;

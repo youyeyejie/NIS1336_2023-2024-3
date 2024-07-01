@@ -1,13 +1,9 @@
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <functional>
 #include "Account.h"
 
 using namespace std;
 
-extern const string USER_DIR;
-int User::uid = 0;
+extern const string op;
+extern const string ed;
 
 Account::Account(const string& filename):filename(filename)
 {
@@ -88,10 +84,34 @@ User getUser(const string& username, const string& password, const string& Accou
     return user; 
 }
 
+//获取下一个用户的uid
+int getNextUid(const string& Account_File){
+    ifstream file(Account_File);
+    if (!file) {
+        cout << "Account file cannot open!" << endl;
+        return -1;
+    }
+
+
+    string line;
+    int max_uid=-1;
+    while (getline(file, line)) {
+        istringstream iss(line);
+        string uid, name, storedPassword;
+
+        if (getline(iss, uid, ',') && getline(iss, name, ',') && getline(iss, storedPassword)) {
+            max_uid=max(max_uid, stoi(uid));
+        }
+    }
+
+    file.close();
+    return max_uid+1;
+}
+
 //写入用户信息
 bool writeUser(const User& user, const string& Account_File) {
 
-    ofstream file(Account_File);
+    ofstream file(Account_File, ios::app);
     if (!file) {
         cout << "Account file cannot open!" << endl;
         return false;
@@ -101,7 +121,7 @@ bool writeUser(const User& user, const string& Account_File) {
         cout << "User " << user.username << " already exists! Please change your username." << endl;
         return false;
     }
-
+    
     string line = to_string(user.uid) + "," + user.username + "," + user.password + "\n";
     file << line;
     file.close();
@@ -175,7 +195,8 @@ bool deleteUser(const User& user, const string& Account_File) {
     // replace
     remove(Account_File.c_str());
     rename("temp.txt", Account_File.c_str());
-
+    string userfile = op + user.username + ed;
+    remove(userfile.c_str());
     return true;
 }
 
@@ -213,12 +234,6 @@ int getUid(const string& Account_File) {
 //注册账号
 bool Account::newAccount(const string& input_username, const string& input_pwd)
 {
-    //new user
-    User NewUser;
-    NewUser.username = input_username;
-    NewUser.password = hashString(input_pwd);
-    NewUser.uid = User::uid++;
-
     // open
     FILE* file = fopen(filename.c_str(), "a");
     if (!file)
@@ -226,7 +241,13 @@ bool Account::newAccount(const string& input_username, const string& input_pwd)
         cout << "Account file cannot open!" << endl;
         return false;
     }
-
+    
+    //new user
+    User NewUser;
+    NewUser.username = input_username;
+    NewUser.password = hashString(input_pwd);
+    NewUser.uid = getNextUid(filename);
+    
     // write
     if (writeUser(NewUser, filename) == false)
     {
@@ -237,15 +258,17 @@ bool Account::newAccount(const string& input_username, const string& input_pwd)
     fclose(file);
 
     // create user file
-    string user_file = USER_DIR + input_username + ".txt";
-    ofstream userFile(user_file);
+    string user_file = op + input_username + ed;
+    //ofstream userFile(user_file);
+    FILE* userFile = fopen(user_file.c_str(), "a");
     if (!userFile)
     {
         cout << "User file cannot open!" << endl;
         return false;
     }
-    userFile.close();
-    cout << "Account created successfully!" << endl;
+    //userFile.close();
+    fclose(userFile);
+    //cout << "Account created successfully!" << endl;
 
     return true;
 }
@@ -264,7 +287,7 @@ User Account::login(const string& input_username, const string& input_pwd)
         cout << "Login successful!" << endl;
     } 
     else {
-        //cout << "Incorrect user name or password. Please check your input." << endl;
+        cout << "Incorrect user name or password. Please check your input." << endl;
     }
     return user;
 }

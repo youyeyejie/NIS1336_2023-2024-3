@@ -16,7 +16,7 @@ void addTask(int argc, char * argv[]);
 //删除任务
 void deleteTask(int argc, char * argv[]);
 //修改任务的某几个信息
-void changeElement(int argc, char * argv[]);
+void editTask(int argc, char * argv[]);
 //注册用户
 void userRegister(int argc, char * argv[]);
 //删除用户

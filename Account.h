@@ -1,11 +1,11 @@
 #ifndef ACCOUNT_H
 #define ACCOUNT_H
 
-#include <string>
-#include "types.h"
+#include "head.h"
 using namespace std;
 
-const string USER_DIR = "USER/";
+const string op = "User/";
+const string ed = ".txt";
 
 class Account
     {
@@ -15,6 +15,8 @@ class Account
     friend bool isUserExists(const string& username, const string& Account_File);
     //获取用户信息,成功返回用户信息，失败返回uid为-1的用户信息
     friend User getUser(const string& username, const string& password, const string& Account_File);
+    //获取下一个用户的uid
+    friend int getNextUid(const string& Account_File);
     //写入用户信息,成功返回true，失败返回false
     friend bool writeUser(const User& user, const string& Account_File);
     //更新用户信息,成功返回true，失败返回false

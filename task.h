@@ -1,13 +1,12 @@
 #ifndef TASKS_H
 #define TASKS_H
 
-#include <vector>
-#include <ctime>
 #include "Account.h"
 
 using namespace std;
 
-extern const string USER_DIR;
+extern const string op;
+extern const string ed;
 
 //string转换优先级
 Priority convertStringToPriority(const string& priorityStr);
@@ -31,7 +30,8 @@ string getDefaultRemindTime(time_t time);
 int getNextId(vector<Task> tasks);
 //检查日期格式
 bool checkDateFormat(const string& str);
-
+//打印单个任务
+void displaySingleTask(const Task& task);
 //按开始时间打印任务
 void displayTaskByStartTime(const vector<Task>& tasks);
 //按优先级打印任务

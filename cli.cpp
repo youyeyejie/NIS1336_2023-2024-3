@@ -1,11 +1,3 @@
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <iomanip>
-#include <vector>
-#include <cstring>
-#include <getopt.h>
-#include <unistd.h>
 #include "cli.h"
 
 using namespace std;
@@ -15,9 +7,9 @@ int main(int argc, char * argv[]){
     /*
     support commands:
     ./cli displaytask -u username -p password -k kindOfDisplay
-    ./cli addtask -u username -p password -n name -p prio -c cat -s start_time -r remind_time -d detail 
+    ./cli addtask -u username -p password -n name -o prio -c cat -s start_time -r remind_time -d detail 
     ./cli deltask -u username -p password -i id
-    ./cli changeelement -u username -p password -i id -n name -o prio -c cat -r rem -d detail -s start
+    ./cli edittask -u username -p password -i id -n name -o prio -c cat -r rem -d detail -s start
     ./cli register -u username -p password
     ./cli deregister -u username -p password
     ./cli changepassword -u username -p password -n newpassword
@@ -44,11 +36,11 @@ int main(int argc, char * argv[]){
     else if(strcmp(argv[1], "deregister") == 0){
         userDeregister(argc, argv);
     }
-    else if(strcmp(argv[1], "passwd") == 0){
+    else if(strcmp(argv[1], "changepassword") == 0){
         changePassword(argc, argv);
     }
-    else if(strcmp(argv[1], "changeelement") == 0){
-        changeElement(argc, argv);
+    else if(strcmp(argv[1], "edittask") == 0){
+        editTask(argc, argv);
     }
     // else if(strcmp(argv[1], "login") == 0){
     //     userLogin(argc, argv);
@@ -57,7 +49,8 @@ int main(int argc, char * argv[]){
     //     checkTask(argc, argv);
     // }
     else{
-        cout<<"Unknown command! Use help to show usage!";
+        cout<<"Unknown command!"<< endl;
+        displayHelp();
     }
     return 0;
 }
@@ -67,11 +60,11 @@ void displayHelp(){
     cout << "./cli [command] [options]" << endl;
     cout << "Commands:" << endl;
     cout << "displaytask -u username -p password -k kindOfDisplay(id/starttime/remindtime/priority/category)" << endl;
-    cout << "addtask -u username -p password -n name -p prio -c cat -s start_time -r remind_time -d detail" << endl;
+    cout << "addtask -u username -p password -n name [-o prio] [-c cat] [-s start_time] [-r remind_time] [-d detail]" << endl;
     cout << "deltask -u username -p password -i id" << endl;
-    cout << "changeelement -u username -p password -i id -n name -o prio -c cat -r rem -d detail -s start" << endl;
+    cout << "edittask -u username -p password -i id [-n name] [-o prio] [-c cat] [-r remind_time] [-d detail] [-s start_time]" << endl;
     cout << "register -u username -p password" << endl;
-    cout << "deregsiter -u username -p password" << endl;
+    cout << "deregister -u username -p password" << endl;
     cout << "changepassword -u username -p password -n newpassword" << endl;
     // cout << "check -u username -p password" << endl;    
     // cout << "login -u username -p password" << endl;
@@ -203,7 +196,7 @@ void addTask(int argc, char * argv[]){
     //login
     User user = account.login(username, password);
     if(user.uid == -1){
-        cout<<"Incorrect user name or password. Please check your input.";
+        cout<<"Incorrect user name or password. Please check your input."<< endl;
         exit(-1);
     }
 
@@ -278,8 +271,8 @@ void addTask(int argc, char * argv[]){
             cout << "Remind time format error!" << endl;
             exit(-1);
         }
-        if (convertStringToTime(remind_time) < convertStringToTime(start_time)){
-            cout << "Remind time cannot be earlier than start time!" << endl;
+        if (convertStringToTime(remind_time) > convertStringToTime(start_time)){
+            cout << "Remind time cannot be later than start time!" << endl;
             exit(-1);
         }
         new_task.remind_time = convertStringToTime(remind_time);
@@ -288,6 +281,7 @@ void addTask(int argc, char * argv[]){
 
     //add new task to tasklist
     tasklist.push_back(new_task);
+    cout << "Add task successfully!" << endl;
 
     //save
     saveTask2File(tasklist, &user);
@@ -359,9 +353,9 @@ void deleteTask(int argc, char * argv[]){
 }
 
 //修改任务的某几个信息
-void changeElement(int argc, char * argv[]){
+void editTask(int argc, char * argv[]){
     /*
-    ./cli changeelement -u username -p password -i id -n name -o prio -c cat -r remind_time -d detail -s start_time
+    ./cli edittask -u username -p password -i id -n name -o prio -c cat -r remind_time -d detail -s start_time
     */
 
     Account account("Account.txt");
@@ -416,7 +410,7 @@ void changeElement(int argc, char * argv[]){
     }
 
     //check login info
-    if(username.empty() || password.empty() || id == 0){
+    if(username.empty() || password.empty() || id == -1){
         cout << "Too few arguments!" << endl;
         exit(-1);
     }
@@ -445,20 +439,21 @@ void changeElement(int argc, char * argv[]){
     }
 
     //check name
-    bool name_existed = false;
     if(!name.empty()){
+    	bool name_existed = false;
         for(int i = 0; i < tasklist.size(); ++i){
         	if(tasklist[i].name == name){
         	    name_existed = true;
         	    break;
         	}
-   		} 
+   	}
+   	if(name_existed){
+        	cout << "Task name already exists!" << endl;
+        	exit(-1);
+    	}
+    	tasklist[indexOfTask].name = name; 
     }
-    if(name_existed){
-        cout << "Task name already exists!" << endl;
-        exit(-1);
-    }
-    tasklist[indexOfTask].name = name;
+    
     
     //replace priority
     if (!prio.empty()){
@@ -506,8 +501,8 @@ void changeElement(int argc, char * argv[]){
             cout << "Remind time format error!" << endl;
             exit(-1);
         }
-        if (convertStringToTime(remind_time) < convertStringToTime(start_time)){
-            cout << "Remind time cannot be earlier than start time!" << endl;
+        if (convertStringToTime(remind_time) > convertStringToTime(start_time)){
+            cout << "Remind time cannot be later than start time!" << endl;
             exit(-1);
         }
         tasklist[indexOfTask].remind_time = convertStringToTime(remind_time);
