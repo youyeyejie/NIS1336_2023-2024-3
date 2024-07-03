@@ -2,10 +2,8 @@
 #define ACCOUNT_H
 
 #include "head.h"
-using namespace std;
 
-const string op = "User/";
-const string ed = "_tasks.txt";
+using namespace std;
 
 class Account
     {

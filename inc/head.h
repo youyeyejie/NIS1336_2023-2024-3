@@ -1,5 +1,6 @@
 #ifndef HEAD_H
 #define HEAD_H
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -17,8 +18,14 @@
 #include <sys/file.h> 
 #include <sys/types.h>
 #include <getopt.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 using namespace std;
+
+const string op = "User/";
+const string ed = "_tasks.txt";
+const string account_filename = "Account.txt";
 
 //任务优先级:1.高 2.中 3.低
 enum Priority{

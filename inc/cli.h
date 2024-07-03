@@ -5,8 +5,7 @@
 
 using namespace std;
 
-
-const string account_filename = "Account.txt";
+extern string account_filename;
 
 //命令行操作
 
