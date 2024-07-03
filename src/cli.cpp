@@ -1,64 +1,13 @@
-#include "cli.h"
+#include "../inc/cli.h"
 
 using namespace std;
 
-
-int main(int argc, char * argv[]){
-    /*
-    support commands:
-    ./cli displaytask -u username -p password -k kindOfDisplay
-    ./cli addtask -u username -p password -n name -o prio -c cat -s start_time -r remind_time -d detail 
-    ./cli deltask -u username -p password -i id
-    ./cli edittask -u username -p password -i id -n name -o prio -c cat -r rem -d detail -s start
-    ./cli register -u username -p password
-    ./cli deregister -u username -p password
-    ./cli changepassword -u username -p password -n newpassword
-    ./cli checkremind -u username -p password
-    ./cli login -u username -p password
-    */
-
-    if(argc < 2 || strcmp(argv[1], "help") == 0){
-        displayHelp();
-        exit(-1);
-    }
-    else if(strcmp(argv[1], "displaytask") == 0){
-        displayTask(argc, argv);
-    }
-    else if(strcmp(argv[1], "addtask") == 0){
-        addTask(argc, argv);
-    }
-    else if(strcmp(argv[1], "deltask") == 0){
-        deleteTask(argc, argv);
-    }
-    else if(strcmp(argv[1], "register") == 0){
-        userRegister(argc, argv);
-    }
-    else if(strcmp(argv[1], "deregister") == 0){
-        userDeregister(argc, argv);
-    }
-    else if(strcmp(argv[1], "changepassword") == 0){
-        changePassword(argc, argv);
-    }
-    else if(strcmp(argv[1], "edittask") == 0){
-        editTask(argc, argv);
-    }
-    else if(strcmp(argv[1], "checkremind") == 0){
-        checkRemindTime(argc, argv);
-    }
-    // else if(strcmp(argv[1], "login") == 0){
-    //     userLogin(argc, argv);
-    // }
-    else{
-        cout<<"Unknown command!"<< endl;
-        displayHelp();
-    }
-    return 0;
-}
-
+//打印帮助信息
 void displayHelp(){
     cout << "Usage: " << endl;
-    cout << "./cli [command] [options]" << endl;
+    cout << "./main [command] [options]" << endl;
     cout << "Commands:" << endl;
+    cout << "run" << endl;
     cout << "displaytask -u username -p password -k kindOfDisplay(id/starttime/remindtime/priority/category)" << endl;
     cout << "addtask -u username -p password -n name [-o prio] [-c cat] [-s start_time] [-r remind_time] [-d detail]" << endl;
     cout << "deltask -u username -p password -i id" << endl;
@@ -72,7 +21,7 @@ void displayHelp(){
 //按照指定方式显示任务
 void displayTask(int argc, char * argv[]){
     /*
-    ./cli displaytask -u username -p password -k kindOfDisplay(id/starttime/remindtime/priority/category)
+    ./main displaytask -u username -p password -k kindOfDisplay(id/starttime/remindtime/priority/category)
     */
     string username, password, kindOfDisplay;
     Account account(account_filename);
@@ -139,7 +88,7 @@ void displayTask(int argc, char * argv[]){
 //添加任务
 void addTask(int argc, char * argv[]){
     /*
-    ./cli add -u username -p password -n name -o prio -c cat -s start_time -r remind_time -d detail 
+    ./main add -u username -p password -n name -o prio -c cat -s start_time -r remind_time -d detail 
     */
 
     Account account(account_filename);
@@ -289,7 +238,7 @@ void addTask(int argc, char * argv[]){
 //删除任务
 void deleteTask(int argc, char * argv[]){
     /* 
-    ./cli deltask -u username -p password -i id
+    ./main deltask -u username -p password -i id
     */
 
     Account account(account_filename);
@@ -354,7 +303,7 @@ void deleteTask(int argc, char * argv[]){
 //修改任务的某几个信息
 void editTask(int argc, char * argv[]){
     /*
-    ./cli edittask -u username -p password -i id -n name -o prio -c cat -r remind_time -d detail -s start_time
+    ./main edittask -u username -p password -i id -n name -o prio -c cat -r remind_time -d detail -s start_time
     */
 
     Account account(account_filename);
@@ -515,7 +464,7 @@ void editTask(int argc, char * argv[]){
 //注册用户
 void userRegister(int argc, char* argv[]){
     /*
-    ./cli register -u username -p password
+    ./main register -u username -p password
     */
     Account account(account_filename);
 
@@ -554,7 +503,7 @@ void userRegister(int argc, char* argv[]){
 //删除用户
 void userDeregister(int argc, char* argv[]){
     /*
-    ./cli deregister -u username -p password
+    ./main deregister -u username -p password
     */
     Account account(account_filename);
 

@@ -1,5 +1,4 @@
-#include"head.h"
-#include"task.h"
+#include "../inc/thread2.h"
 
 using namespace std;
 
