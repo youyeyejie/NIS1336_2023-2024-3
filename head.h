@@ -1,21 +1,21 @@
 #ifndef HEAD_H
 #define HEAD_H
-#include <ctime>
-#include <string> 
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <iomanip>
+#include <vector>
+#include <cstring>
+#include <string>
+#include <ctime> 
+#include <algorithm>
+#include <regex>
 #include <functional>
 #include <unistd.h>
 #include <pthread.h>
-#include <vector>
-#include <iomanip>
-#include <algorithm>
-#include <regex>
 #include <fcntl.h> 
 #include <sys/file.h> 
 #include <sys/types.h>
-#include <cstring>
 #include <getopt.h>
 
 using namespace std;

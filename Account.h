@@ -5,7 +5,7 @@
 using namespace std;
 
 const string op = "User/";
-const string ed = ".txt";
+const string ed = "_tasks.txt";
 
 class Account
     {

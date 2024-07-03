@@ -5,6 +5,9 @@
 
 using namespace std;
 
+
+const string account_filename = "Account.txt";
+
 //命令行操作
 
 //打印帮助信息
@@ -23,7 +26,7 @@ void userRegister(int argc, char * argv[]);
 void userDeregister(int argc, char * argv[]);
 //修改密码
 void changePassword(int argc, char * argv[]);
+//检查提醒时间
+void checkRemindTime(int argc, char * argv[]);
 
-//void userLogin(int argc, char * argv[]);
-//void checkTask(int argc, char* argv[]);
 #endif

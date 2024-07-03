@@ -140,6 +140,16 @@ bool checkDateFormat(const string& str) {
     return true;
 }
 
+//检查提醒时间
+void checkRemindTime(const vector<Task> tasks) {
+    time_t cur = time(NULL);
+    for (const Task& task : tasks) {
+        if (task.remind_time >= cur - 1 && task.remind_time <= cur + 1) {
+            displaySingleTask(task);
+        }
+    }
+}
+
 //打印单个任务
 void displaySingleTask(const Task& task) {
     cout << setw(2) << task.id << "\t";
