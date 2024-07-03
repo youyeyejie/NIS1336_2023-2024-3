@@ -1,6 +1,6 @@
 # NIS1336_2023-2024-3
 
-## TO_do
+## To_do
 1. inc/thread1.h
 2. src/thread1.cpp
 3. src/main.cpp
