@@ -1,14 +1,14 @@
 # NIS1336_2023-2024-3
 
 ## To_do
-[ ]1. inc/thread1.h
-[ ]2. src/thread1.cpp
-[ ]3. src/main.cpp
-[ ]4. GUIsrc/图形化界面
-[ ]5. build/cmake文件
-[ ]6. bin/Schedule等可执行程序
-[ ]7. test/shell测试程序
-[ ]8. 设计文档
+1. inc/thread1.h
+2. src/thread1.cpp
+3. src/main.cpp
+4. GUIsrc/图形化界面
+5. build/cmake文件
+6. bin/Schedule等可执行程序
+7. test/shell测试程序
+8. 设计文档
  
 ## 作业目标
 
