@@ -26,9 +26,11 @@
 
 using namespace std;
 
-const string op = "./Data/User/";
+extern string getExePath();
+
+const string op = getExePath() + "/Data/User/";
 const string ed = "_tasks.txt";
-const string account_filename = "./Data/Account.txt";
+const string account_filename = getExePath() + "/Data/Account.txt";
 
 //任务优先级:1.高 2.中 3.低
 enum Priority{
@@ -64,7 +66,6 @@ struct ThreadInfo
     pthread_mutex_t* mutex;
     bool running;
 };
-
 
 
 #endif

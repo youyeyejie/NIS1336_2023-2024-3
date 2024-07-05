@@ -40,5 +40,7 @@ private:
     string filename;//账户文件名
 };
 
+//获取可执行文件所在文件夹路径
+string getExePath();
 
 #endif
