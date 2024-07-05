@@ -235,6 +235,15 @@ int getUid(const string& Account_File) {
 bool Account::newAccount(const string& input_username, const string& input_pwd)
 {
     // open
+    string dir = "./Data";
+    if (access(dir.c_str(), 0) == -1){
+    	if (mkdir(dir.c_str(), S_IRWXU) == 0) {  //创建成功
+          cout << "Create Data directory successfully." << endl;
+      } else { //创建失败
+          cout << "Fail to create directory." << endl;
+          return false;
+      }
+    }
     FILE* file = fopen(filename.c_str(), "a");
     if (!file)
     {
@@ -258,6 +267,15 @@ bool Account::newAccount(const string& input_username, const string& input_pwd)
     fclose(file);
 
     // create user file
+    dir = "./Data/User";
+    if (access(dir.c_str(), 0) == -1){
+    	if (mkdir(dir.c_str(), S_IRWXU) == 0) {  //创建成功
+          cout << "Create User directory successfully." << endl;
+      } else { //创建失败
+          cout << "Fail to create directory." << endl;
+          return false;
+      }
+    }
     string user_file = op + input_username + ed;
     //ofstream userFile(user_file);
     FILE* userFile = fopen(user_file.c_str(), "a");

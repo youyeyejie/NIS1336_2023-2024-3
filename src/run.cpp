@@ -12,34 +12,34 @@ void run(){
     int opt;
 
     //register or login
-    printf("Welcome to Task Manager!\n");
-    printf("Please select the operation: 1.Register 2.Login 3.Quit\n");
+    cout<< "Welcome to Task Manager!\n";
+    cout<< "Please select the operation: 1.Register 2.Login 3.Quit\n";
     scanf("%d", &opt);
 
     switch (opt)
     {
     case 1://register
-        printf("User register:\n");
-        printf("Input your username:");
-        scanf("%s", username);
-        printf("Input your password:");
-        scanf("%s", password);
+        cout<< "User register:\n";
+        cout<< "Input your username:";
+        getline(cin, username);
+        cout<< "Input your password:";
+        getline(cin, password);
         if(account.newAccount(username, password)){
-            printf("Register successfully!\n");
+            cout<< "Register successfully!\n";
         }
 
     case 2://login
-        printf("User login:\n");
-        printf("Input your username:");
-        scanf("%s", username);
-        printf("Input your password:");
-        scanf("%s", password);
+        cout<< "User login:\n";
+        cout<< "Input your username:";
+        getline(cin, username);
+        cout<< "Input your password:";
+        getline(cin, password);
         current_user = account.login(username, password);
         if(current_user.uid == -1){
-            printf("Incorrect user name or password. Please check your input.\n");
+            cout<< "Incorrect user name or password. Please check your input.\n";
             exit(-1);
         }
-        printf("Login successfully! Welcome %s.\n", current_user.username);
+        cout<< "Login successfully! Welcome "<< current_user.username<<endl;
         break;
 
     case 3://quit
@@ -47,7 +47,7 @@ void run(){
         break;
     
     default:
-        printf("Unknown command! Can only accept '1' or '2'.\n");
+        cout<< "Unknown command! Can only accept '1' or '2'.\n";
         exit(-1);
         break;
     }
@@ -62,13 +62,13 @@ void run(){
 
     //create thread1
     if(pthread_create(th_1, NULL, thread1, &thread_arg)){
-        printf("Create thread 1 failed.\n");
+        cout<< "Create thread 1 failed.\n";
         exit(-1);
     }
 
     //create thread2
     if(pthread_create(th_2, NULL, thread2, &thread_arg)){
-        printf("Create thread 2 failed.\n");
+        cout<< "Create thread 2 failed.\n";
         exit(-1);
     }
 

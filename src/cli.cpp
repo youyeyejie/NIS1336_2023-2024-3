@@ -5,7 +5,7 @@ using namespace std;
 //打印帮助信息
 void displayHelp(){
     cout << "Usage: " << endl;
-    cout << "./main [command] [options]" << endl;
+    cout << "[path] [command] [options]" << endl;
     cout << "Commands:" << endl;
     cout << "run" << endl;
     cout << "displaytask -u username -p password -k kindOfDisplay(id/starttime/remindtime/priority/category)" << endl;
