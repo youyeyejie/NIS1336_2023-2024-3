@@ -19,12 +19,11 @@ int main(int argc, char * argv[]){
     ./main login -u username -p password
     */
 
-    if(argc < 2 || strcmp(argv[1], "run") == 0){
-        run();
-    }
-    else if(strcmp(argv[1], "help") == 0){
+    if(argc < 2 || strcmp(argv[1], "help") == 0){
         displayHelp();
-        exit(-1);
+    }
+    else if(strcmp(argv[1], "run") == 0){
+        run();
     }
     else if(strcmp(argv[1], "displaytask") == 0){
         displayTask(argc, argv);

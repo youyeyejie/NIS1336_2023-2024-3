@@ -231,11 +231,12 @@ int getUid(const string& Account_File) {
     return -1;
 }
 
+
 //注册账号
 bool Account::newAccount(const string& input_username, const string& input_pwd)
 {
-    // open
-    string dir = "./Data";
+    //new directory
+    string dir = getExePath() + "/Data";
     if (access(dir.c_str(), 0) == -1){
     	if (mkdir(dir.c_str(), S_IRWXU) == 0) {  //创建成功
           cout << "Create Data directory successfully." << endl;
@@ -244,6 +245,8 @@ bool Account::newAccount(const string& input_username, const string& input_pwd)
           return false;
       }
     }
+
+    // open
     FILE* file = fopen(filename.c_str(), "a");
     if (!file)
     {
@@ -267,7 +270,7 @@ bool Account::newAccount(const string& input_username, const string& input_pwd)
     fclose(file);
 
     // create user file
-    dir = "./Data/User";
+    dir += "/User";
     if (access(dir.c_str(), 0) == -1){
     	if (mkdir(dir.c_str(), S_IRWXU) == 0) {  //创建成功
           cout << "Create User directory successfully." << endl;
@@ -350,4 +353,16 @@ bool Account::deleteAccount(const string& input_username, const string& input_pa
     deleteUser(user, filename);
     cout << "Account deleted successfully!" << endl;
     return true;
+}
+
+//获取可执行文件所在文件夹路径
+string getExePath() {
+    char buff[1024] = {0};
+    readlink("/proc/self/exe", buff, sizeof(buff)-1);
+    string exe_path(buff);
+    size_t pos = exe_path.rfind('/');
+    if (pos != string::npos) {
+        exe_path = exe_path.substr(0, pos);
+    }
+    return exe_path;
 }
