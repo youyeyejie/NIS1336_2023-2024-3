@@ -4,7 +4,6 @@
 #include "thread1.h"
 #include "thread2.h"
 
-extern string account_filename;
 
 void run();
 

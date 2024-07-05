@@ -5,7 +5,6 @@
 
 using namespace std;
 
-extern string account_filename;
 
 //命令行操作
 
