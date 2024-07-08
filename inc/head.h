@@ -31,6 +31,7 @@ extern string getExePath();
 const string op = getExePath() + "/Data/User/";
 const string ed = "_tasks.txt";
 const string account_filename = getExePath() + "/Data/Account.txt";
+const string QUIT = "(\"ESC\" to quit)";
 
 //任务优先级:1.高 2.中 3.低
 enum Priority{

@@ -35,7 +35,7 @@ void run(){
         cout<< "Input your password:";
         getline(cin, password);
         current_user = account.login(username, password);
-        if(current_user.uid == -1){
+        if(current_user.uid == 0){
             cout<< "Incorrect user name or password. Please check your input.\n";
             exit(-1);
         }

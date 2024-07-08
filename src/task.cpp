@@ -109,7 +109,7 @@ string getDefaultRemindTime(time_t time) {
 int getNextId(vector<Task> tasks) {
     if (tasks.empty()) 
     {
-        return 0;
+        return 1;
     } 
     else 
     {
@@ -140,11 +140,21 @@ bool checkDateFormat(const string& str) {
     return true;
 }
 
+//检查id格式
+bool checkIdFormat(const string id) {
+    for (char c : id) {
+        if (c < '0' || c > '9') {
+            return false;
+        }
+    }
+    return true;
+}
+
 //检查提醒时间
 void checkRemindTime(const vector<Task> tasks) {
     time_t cur = time(NULL);
     for (const Task& task : tasks) {
-        if (task.remind_time >= cur - 1 && task.remind_time <= cur + 1) {
+        if (task.remind_time >= cur - 16 && task.remind_time <= cur + 16) {
             displaySingleTask(task);
         }
     }
@@ -171,6 +181,7 @@ void displayTaskTitle(){
     cout << setw(24) << "Remind Time" << "\t";
     cout << "Detail" << endl;
 }
+
 //按开始时间打印任务
 void displayTaskByStartTime(const vector<Task>& tasks) {
     vector<Task> clonetasks(tasks);

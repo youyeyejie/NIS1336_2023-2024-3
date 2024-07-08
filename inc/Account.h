@@ -6,7 +6,7 @@
 using namespace std;
 
 class Account
-    {
+{
     //哈希加密
     friend string hashString(const string& input);
     //检查用户名是否存在
@@ -21,8 +21,6 @@ class Account
     friend bool updateUser(const User& user, const string& Account_File);
     //删除用户信息,成功返回true，失败返回false
     friend bool deleteUser(const User& user, const string& Account_File);
-    //获取用户ID,成功返回用户ID，失败返回-1
-    friend int getUid(const string& Account_File);
 
 public:
     Account(const string& filename);

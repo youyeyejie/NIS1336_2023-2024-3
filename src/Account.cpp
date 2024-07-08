@@ -2,8 +2,6 @@
 
 using namespace std;
 
-extern const string op;
-extern const string ed;
 
 Account::Account(const string& filename):filename(filename)
 {
@@ -54,7 +52,7 @@ bool isUserExists(const string& username, const string& Account_File) {
 User getUser(const string& username, const string& password, const string& Account_File) {
 
     User user;
-    user.uid = -1;
+    user.uid = 0;
 
     ifstream file(Account_File);
     if (!file) {
@@ -94,7 +92,7 @@ int getNextUid(const string& Account_File){
 
 
     string line;
-    int max_uid=-1;
+    int max_uid = 0;
     while (getline(file, line)) {
         istringstream iss(line);
         string uid, name, storedPassword;
@@ -200,38 +198,6 @@ bool deleteUser(const User& user, const string& Account_File) {
     return true;
 }
 
-//获取用户ID
-int getUid(const string& Account_File) {
-
-    ifstream file(Account_File);
-    if (!file) {
-        cout << "Account file cannot open!" << endl;
-        return -1;
-    }
-
-    string line;
-    while (getline(file, line)) {
-        if (line.empty()) {
-            continue;
-        }
-
-        istringstream iss(line);
-        string uid, name, storedPassword;
-
-        if (getline(iss, uid, ',') && getline(iss, name, ',') && getline(iss, storedPassword)) {
-            continue;
-        }
-            
-        file.close();
-        return stoi(uid);
-    }
-
-    cout << "No user found!" << endl;
-    file.close();
-    return -1;
-}
-
-
 //注册账号
 bool Account::newAccount(const string& input_username, const string& input_pwd)
 {
@@ -303,7 +269,7 @@ User Account::login(const string& input_username, const string& input_pwd)
     // verify
     User user;
     user = getUser(input_username, hashpwd, filename);
-    if ( user.uid != -1 ) 
+    if ( user.uid != 0 ) 
     {
         cout << "Login successful!" << endl;
     } 
@@ -322,7 +288,7 @@ bool Account::changePassword(const string& input_username, const string& OldPwd,
 
     // Verify 
     User user = getUser(input_username, hashOldPwd, filename);
-    if (user.uid == -1)
+    if (user.uid == 0)
     {
         cout << "Incorrect user name or password. Please check your input." << endl;
         return false;
@@ -343,7 +309,7 @@ bool Account::deleteAccount(const string& input_username, const string& input_pa
 
     // Verify
     User user = getUser(input_username, hashpwd, filename);
-    if (user.uid == -1)
+    if (user.uid == 0)
     {
         cout << "Incorrect user name or password. Please check your input." << endl;
         return false;

@@ -30,8 +30,8 @@ void *thread2(void* arg){
         saveTask2File(tasklist, user);
         pthread_mutex_unlock(mutex);
 
-        //sleep 2s
-        sleep(2);
+        //sleep 30s
+        sleep(30);
     }
 
     return NULL;

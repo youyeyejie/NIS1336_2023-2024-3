@@ -51,7 +51,7 @@ void displayTask(int argc, char * argv[]){
 
     //login
     User user = account.login(username, password);
-    if(user.uid == -1){
+    if(user.uid == 0){
         cout << "Incorrect user name or password. Please check your input." << endl;
         exit(-1);
     }
@@ -143,7 +143,7 @@ void addTask(int argc, char * argv[]){
 
     //login
     User user = account.login(username, password);
-    if(user.uid == -1){
+    if(user.uid == 0){
         cout<<"Incorrect user name or password. Please check your input."<< endl;
         exit(-1);
     }
@@ -243,7 +243,7 @@ void deleteTask(int argc, char * argv[]){
 
     Account account(account_filename);
     string username, password;
-    int id = -1;
+    string id;
 
     //getopt
     char optret;
@@ -256,7 +256,7 @@ void deleteTask(int argc, char * argv[]){
             password = optarg;
             break;
         case 'i':
-            id = atoi(optarg);
+            id = optarg;
             break;
         default:
             break;
@@ -271,7 +271,7 @@ void deleteTask(int argc, char * argv[]){
 
     //login
     User user = account.login(username, password);
-    if(user.uid == -1){
+    if(user.uid == 0){
         cout << "Incorrect user name or password. Please check your input." << endl;
         exit(-1);
     }
@@ -282,8 +282,12 @@ void deleteTask(int argc, char * argv[]){
     //check id and get index
     bool flag = false;
     int indexOfTask = -1;
+    if (!checkIdFormat(id)){
+        cout << "Id format error!" << endl;
+        exit(-1);
+    }
     for(int i = 0; i < tasklist.size(); ++i){
-        if(tasklist[i].id == id){
+        if(tasklist[i].id == stoi(id)){
             flag = true;
             indexOfTask = i;
             break;
@@ -308,7 +312,7 @@ void editTask(int argc, char * argv[]){
 
     Account account(account_filename);
     string username, password;
-    int id = -1;
+    string id;
     string name, detail, prio, cat, start_time, remind_time;
     
     //getopt
@@ -325,7 +329,7 @@ void editTask(int argc, char * argv[]){
             break;
 
         case 'i':
-            id = atoi(optarg);
+            id = optarg;
             break;
 
         case 'n':
@@ -358,12 +362,12 @@ void editTask(int argc, char * argv[]){
     }
 
     //check login info
-    if(username.empty() || password.empty() || id == -1){
+    if(username.empty() || password.empty() || id.empty()){
         cout << "Too few arguments!" << endl;
         exit(-1);
     }
     User user = account.login(username, password);
-    if(user.uid == -1){
+    if(user.uid == 0){
         cout << "Incorrect user name or password. Please check your input." << endl;
         exit(-1);
     }
@@ -374,8 +378,12 @@ void editTask(int argc, char * argv[]){
     //check id and get index
     bool flag = false;
     int indexOfTask = -1;
+    if (!checkIdFormat(id)){
+        cout << "Id format error!" << endl;
+        exit(-1);
+    }
     for(int i = 0; i < tasklist.size(); ++i){
-        if(tasklist[i].id == id){
+        if(tasklist[i].id == stoi(id)){
             flag = true;
             indexOfTask = i;
             break;
@@ -606,7 +614,7 @@ void checkRemindTime(int argc, char* argv[]){
 
     //login
     User user = account.login(username, password);
-    if(user.uid == -1){
+    if(user.uid == 0){
         cout << "Incorrect user name or password. Please check your input." << endl;
         exit(-1);
     }
