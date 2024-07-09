@@ -22,7 +22,7 @@ string convertPriorityToString(Priority priority);
 string convertCategoryToString(Category category);
 //时间转换为string
 string convertTimeToString(time_t time);
-//默认提醒时间为下周
+//默认提醒时间为一天
 string getDefaultRemindTime(time_t time);
 
 
