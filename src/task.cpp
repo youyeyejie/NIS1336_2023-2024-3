@@ -157,7 +157,7 @@ void checkRemindTime(const vector<Task> tasks) {
     for (const Task& task : tasks) {
         if (task.remind_time >= cur - 0.2 && task.remind_time <= cur + 0.2) {
             if (!flag) {
-                cout << "Remind Time is coming!" << endl;
+                cout << endl << "Remind Time is coming!" << endl;
                 displayTaskTitle();
                 cout << "------------------------------------------------------------------------------------------------------------------------------------------" << endl;
                 flag = true;
@@ -172,24 +172,24 @@ void checkRemindTime(const vector<Task> tasks) {
 
 //打印单个任务
 void displaySingleTask(const Task& task) {
-    cout << setw(2) << task.id << "\t";
-    cout << setw(12) << task.name << "\t";
-    cout << setw(24) << convertTimeToString(task.start_time) << "\t";
+    cout << setw(3) << task.id << "\t";
+    cout << setw(10) << task.name << "\t";
+    cout << setw(20) << convertTimeToString(task.start_time) << "\t";
     cout << setw(12) << convertPriorityToString(task.prio) << "\t";
-    cout << setw(16) << convertCategoryToString(task.cat) << "\t";
+    cout << setw(12) << convertCategoryToString(task.cat) << "\t";
     cout << setw(24) << convertTimeToString(task.remind_time) << "\t";
-    cout << task.detail << endl;
+    cout << setw(24) << task.detail << endl;
 }
 
 //打印表头
 void displayTaskTitle(){
-    cout << setw(2) << "ID" << "\t";
-    cout << setw(12) << "Name" << "\t";
-    cout << setw(24) << "Start Time" << "\t";
+    cout << setw(3) << "ID" << "\t";
+    cout << setw(10) << "Name" << "\t";
+    cout << setw(20) << "Start Time" << "\t";
     cout << setw(12) << "Priority" << "\t";
-    cout << setw(16) << "Category" << "\t";
+    cout << setw(12) << "Category" << "\t";
     cout << setw(24) << "Remind Time" << "\t";
-    cout << "Detail" << endl;
+    cout << setw(24) << "Detail" << endl;
 }
 
 //按开始时间打印任务

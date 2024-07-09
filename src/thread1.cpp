@@ -265,7 +265,7 @@ void add_task(void *arg)
     }
 
     //ask user to input detail
-    cout << "Please input the task detail " << QUIT << ": ";
+    cout << "Please input the task detail (press ENTER to skip) " << QUIT << ": ";
     string detail;
     getline(cin, detail);
     if (detail == "ESC")
@@ -741,6 +741,7 @@ void change_password(void *arg)
     if (account.changePassword(cur_username, input_password, new_password))
     {
         cout << "Password changed successfully!" << endl;
+        ((ThreadInfo *)arg)->user->password = hashString(new_password);
     }
     else
     {

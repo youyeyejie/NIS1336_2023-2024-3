@@ -265,17 +265,16 @@ User Account::login(const string& input_username, const string& input_pwd)
 {
     // hash
     string hashpwd = hashString(input_pwd);
-
     // verify
     User user;
     user = getUser(input_username, hashpwd, filename);
-    if ( user.uid != 0 ) 
-    {
-        cout << "Login successful!" << endl;
-    } 
-    else {
-        cout << "Incorrect user name or password. Please check your input." << endl;
-    }
+    //if ( user.uid != 0 ) 
+    //{
+        //cout << "Login successful!" << endl;
+    //} 
+    //else {
+        //cout << "Incorrect user name or password. Please check your input." << endl;
+    //}
     return user;
 }
 

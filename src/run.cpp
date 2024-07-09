@@ -16,30 +16,40 @@ void run(){
     cout<< "Please select the operation: 1.Register 2.Login 3.Quit\n";
     scanf("%d", &opt);
     cin.get();
+    bool valid;
     
     switch (opt)
     {
     case 1://register
-        cout<< "User register:\n";
-        cout<< "Input your username:";
-        getline(cin, username);
-        cout<< "Input your password:";
-        getline(cin, password);
-        if(account.newAccount(username, password)){
-            cout<< "Register successfully!\n";
-        }
+    	valid=false;
+    	while(!valid){
+    		cout<< "User register:\n";
+        	cout<< "Input your username:";
+        	getline(cin, username);
+        	cout<< "Input your password:";
+        	getline(cin, password);
+        	if(account.newAccount(username, password)){
+        	    cout<< "Register successfully!\n";
+        	    valid=true;
+        	}
+    	}
+        
 
     case 2://login
-        cout<< "User login:\n";
-        cout<< "Input your username:";
-        getline(cin, username);
-        cout<< "Input your password:";
-        getline(cin, password);
-        current_user = account.login(username, password);
-        if(current_user.uid == 0){
-            cout<< "Incorrect user name or password. Please check your input.\n";
-            exit(-1);
-        }
+    	valid=false;
+    	while(!valid){
+    		cout<< "User login:\n";
+        	cout<< "Input your username:";
+        	getline(cin, username);
+        	cout<< "Input your password:";
+        	getline(cin, password);
+        	current_user = account.login(username, password);
+        	if(current_user.uid == 0){
+        	    cout<< "Incorrect user name or password. Please check your input.\n";
+        	}
+        	else valid = true;
+    	}
+        
         cout<< "Login successfully! Welcome " << current_user.username << "!" << endl;
         break;
 
