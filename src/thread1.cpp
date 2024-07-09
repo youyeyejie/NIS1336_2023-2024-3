@@ -179,7 +179,7 @@ void add_task(void *arg)
 
     //ask user to input start time
     string stime;
-    bool valid = false; 
+    valid = false; 
     while (!valid)
     {   
         cout << "Please input the task start time (Format: yyyy-mm-dd/hh:mm:ss) " << QUIT << ": ";

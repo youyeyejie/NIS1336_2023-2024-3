@@ -15,7 +15,8 @@ void run(){
     cout<< "Welcome to Task Manager!\n";
     cout<< "Please select the operation: 1.Register 2.Login 3.Quit\n";
     scanf("%d", &opt);
-
+    cin.get();
+    
     switch (opt)
     {
     case 1://register

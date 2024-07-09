@@ -457,11 +457,16 @@ void editTask(int argc, char * argv[]){
             cout << "Remind time format error!" << endl;
             exit(-1);
         }
-        if (convertStringToTime(remind_time) > convertStringToTime(start_time)){
+        if (convertStringToTime(remind_time) > tasklist[indexOfTask].start_time){
             cout << "Remind time cannot be later than start time!" << endl;
             exit(-1);
         }
         tasklist[indexOfTask].remind_time = convertStringToTime(remind_time);
+    }
+    else {
+    	if (tasklist[indexOfTask].start_time < tasklist[indexOfTask].remind_time) {
+    	    tasklist[indexOfTask].remind_time = convertStringToTime(getDefaultRemindTime(tasklist[indexOfTask].start_time));
+    	}
     }
 
     //save

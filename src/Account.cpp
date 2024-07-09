@@ -297,7 +297,7 @@ bool Account::changePassword(const string& input_username, const string& OldPwd,
     // Update 
     user.password = hashNewPwd;
     updateUser(user, filename);
-    cout << "Password changed successfully!" << endl;
+    //cout << "Password changed successfully!" << endl;
     return true;
 }
 
