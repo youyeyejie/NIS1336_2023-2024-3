@@ -330,5 +330,9 @@ string getExePath() {
     if (pos != string::npos) {
         exe_path = exe_path.substr(0, pos);
     }
+    pos = exe_path.rfind('/');
+    if (pos != string::npos) {
+        exe_path = exe_path.substr(0, pos);
+    }
     return exe_path;
 }

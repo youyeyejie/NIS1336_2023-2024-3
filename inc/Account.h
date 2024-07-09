@@ -7,21 +7,6 @@ using namespace std;
 
 class Account
 {
-    //哈希加密
-    friend string hashString(const string& input);
-    //检查用户名是否存在
-    friend bool isUserExists(const string& username, const string& Account_File);
-    //获取用户信息,成功返回用户信息，失败返回uid为-1的用户信息
-    friend User getUser(const string& username, const string& password, const string& Account_File);
-    //获取下一个用户的uid
-    friend int getNextUid(const string& Account_File);
-    //写入用户信息,成功返回true，失败返回false
-    friend bool writeUser(const User& user, const string& Account_File);
-    //更新用户信息,成功返回true，失败返回false
-    friend bool updateUser(const User& user, const string& Account_File);
-    //删除用户信息,成功返回true，失败返回false
-    friend bool deleteUser(const User& user, const string& Account_File);
-
 public:
     Account(const string& filename);
     ~Account();
@@ -38,7 +23,23 @@ private:
     string filename;//账户文件名
 };
 
+
+//哈希加密
+string hashString(const string& input);
 //获取可执行文件所在文件夹路径
 string getExePath();
+//检查用户名是否存在
+bool isUserExists(const string& username, const string& Account_File);
+//获取用户信息,成功返回用户信息，失败返回uid为-1的用户信息
+User getUser(const string& username, const string& password, const string& Account_File);
+//获取下一个用户的uid
+int getNextUid(const string& Account_File);
+//写入用户信息,成功返回true，失败返回false
+bool writeUser(const User& user, const string& Account_File);
+//更新用户信息,成功返回true，失败返回false
+bool updateUser(const User& user, const string& Account_File);
+//删除用户信息,成功返回true，失败返回false
+bool deleteUser(const User& user, const string& Account_File);
+
 
 #endif

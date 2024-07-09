@@ -4,16 +4,16 @@ using namespace std;
 
 void *thread1(void * arg){
     string command;
-
-    //clear buffer
-    getline(cin, command); 
-
-    display_help();
-
     bool stop = false;
+
+    sleep(1);
+    cout << "-----------------------------------------------" << endl;
+    display_help();
+    cout << "-----------------------------------------------" << endl;
 
     //start polling
     do{
+        cout << "Command: ";
         //get command
         getline(cin, command);
         
@@ -27,24 +27,25 @@ void *thread1(void * arg){
         }else if (command == "displaytask"){
             display_task(arg);
         }else if (command == "deregister"){
-            deregister(arg);
-            stop = true;
+            if (deregister(arg)){
+                stop = true;
+                ((ThreadInfo *)arg)->running = false;
+            }
         }else if (command == "changepassword"){
             change_password(arg);
         }else if (command == "help"){
             display_help();
         }else if (command == "quit"){
             stop = true;
+            ((ThreadInfo *)arg)->running = false;
         }else{
             cout << "Invalid command!" << endl;
             display_help();
         }
         cout << "-----------------------------------------------" << endl;
+        cout << endl;
     }while (!stop);
-    
-    
-    //exit thread
-    pthread_exit(NULL);
+
 
     return NULL;
 }
@@ -52,8 +53,6 @@ void *thread1(void * arg){
 
 //打印帮助信息
 void display_help(){
-cout << "Runnning..." << endl;
-cout << "-----------------------------------------------" << endl;
 cout << "command list:" << endl;
 cout << "addtask            Add a task." << endl;
 cout << "deltask            Delete task with specified id." << endl;
@@ -182,18 +181,24 @@ void add_task(void *arg)
     valid = false; 
     while (!valid)
     {   
-        cout << "Please input the task start time (Format: yyyy-mm-dd/hh:mm:ss) " << QUIT << ": ";
+        cout << "Please input the task start time (press ENTER to skip) (Format: yyyy-mm-dd/hh:mm:ss) " << QUIT << ": ";
         getline(cin, stime);
         if (stime == "ESC")
         {
             return;
         }
 
+        if (stime == "")
+        {
+            newtask.start_time = time(NULL);
+            valid = true;
+            break;
+        }
+
         //check if date format is valid
         if (!checkDateFormat(stime))
         {
             cout << "Invalid date format!" << endl;
-            cout << "Please input the task start time (Format: yyyy-mm-dd/hh:mm:ss) " << QUIT << ": ";
             continue;
         }
 
@@ -201,7 +206,6 @@ void add_task(void *arg)
         if (convertStringToTime(stime) < time(NULL))
         {
             cout << "Start time cannot be earlier than current time!" << endl;
-            cout << "Please input the task start time (Format: yyyy-mm-dd/hh:mm:ss) " << QUIT << ": ";
             continue;
         }
 
@@ -228,18 +232,24 @@ void add_task(void *arg)
     valid = false;
     while (!valid)
     {
-        cout << "Please input the task remind time (Format: yyyy-mm-dd/hh:mm:ss) " << QUIT << ": ";
+        cout << "Please input the task remind time (press ENTER to skip) (Format: yyyy-mm-dd/hh:mm:ss) " << QUIT << ": ";
         getline(cin, rtime);
         if (rtime == "ESC")
         {
             return;
         }
 
+        if (rtime == "")
+        {
+            newtask.remind_time = newtask.start_time - 24 * 60 * 60;
+            valid = true;
+            break;
+        }
+
         //check if date format is valid
         if (!checkDateFormat(rtime))
         {
             cout << "Invalid date format!" << endl;
-            cout << "Please input the task remind time (Format: yyyy-mm-dd/hh:mm:ss) " << QUIT << ": ";
             continue;
         }
 
@@ -247,7 +257,6 @@ void add_task(void *arg)
         if (convertStringToTime(rtime) > newtask.start_time)
         {
             cout << "Remind time cannot be later than start time!" << endl;
-            cout << "Please input the task remind time (Format: yyyy-mm-dd/hh:mm:ss) " << QUIT << ": ";
             continue;
         }
 
@@ -273,6 +282,7 @@ void add_task(void *arg)
     }
 
     //add task
+    newtask.id = getNextId(tasklist);
     tasklist.push_back(newtask);
 
     //save task list
@@ -296,6 +306,7 @@ void delete_task(void *arg)
     }
 
     //display task list
+
     displayTaskById(tasklist);
 
     //ask user to input task id
@@ -388,8 +399,11 @@ void edit_task(void *arg)
         cout << "Task id does not exist!" << endl;
         return;
     }
+    displayTaskTitle();
+    cout << "------------------------------------------------------------------------------------------------------------------------------------------" << endl;
     displaySingleTask(task);
-
+    cout << "------------------------------------------------------------------------------------------------------------------------------------------" << endl;
+    
     //ask user to input new task name
     string name;
 
@@ -642,7 +656,7 @@ void display_task(void *arg)
 
 
 //注销当前用户
-void deregister(void *arg)
+bool deregister(void *arg)
 {
     string cur_username = ((ThreadInfo *)arg)->user->username;
     string cur_password = ((ThreadInfo *)arg)->user->password;
@@ -653,28 +667,40 @@ void deregister(void *arg)
     getline(cin, input_password);
     if (input_password == "ESC")
     {
-        return;
+        return false;
     }
 
     //check if password is correct
-    if (input_password != cur_password)
+    string hash_input_password = hashString(input_password);
+    if (hash_input_password != cur_password)
     {
         cout << "Password is incorrect!" << endl;
-        return;
+        return false;
+    }
+
+    //ask user to confirm
+    cout << "Are you sure to deregister your account? (Y/N): ";
+    string confirm;
+    getline(cin, confirm);
+    if (confirm != "Y" && confirm != "y")
+    {
+        cout << "Deregister canceled!" << endl;
+        return false;
     }
 
     //delete account
     Account account(account_filename);
-    if (account.deleteAccount(cur_username, cur_password))
+    if (account.deleteAccount(cur_username, input_password))
     {
         cout << "Deregister successfully!" << endl;
         cout << "Quitting..." << endl;
+        return true;
     }
     else
     {
         cout << "Deregister failed!" << endl;
+        return false;
     }
-
 }
 
 
@@ -686,7 +712,7 @@ void change_password(void *arg)
     string input_password;
 
     //ask user to input password
-    cout << "Please input your password " << QUIT << ": ";
+    cout << "Please input your old password to comfirm " << QUIT << ": ";
     getline(cin, input_password);
     if (input_password == "ESC")
     {
@@ -694,7 +720,8 @@ void change_password(void *arg)
     }
 
     //check if password is correct
-    if (input_password != cur_password)
+    string hash_input_password = hashString(input_password);
+    if (hash_input_password != cur_password)
     {
         cout << "Password is incorrect!" << endl;
         return;
@@ -711,7 +738,7 @@ void change_password(void *arg)
 
     //change password
     Account account(account_filename);
-    if (account.changePassword(cur_username, cur_password, new_password))
+    if (account.changePassword(cur_username, input_password, new_password))
     {
         cout << "Password changed successfully!" << endl;
     }

@@ -38,6 +38,8 @@ void checkRemindTime(const vector<Task> tasks);
 
 //打印单个任务
 void displaySingleTask(const Task& task);
+//打印表头
+void displayTaskTitle();
 //按开始时间打印任务
 void displayTaskByStartTime(const vector<Task>& tasks);
 //按优先级打印任务

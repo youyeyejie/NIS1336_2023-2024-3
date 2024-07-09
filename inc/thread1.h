@@ -18,7 +18,7 @@ void edit_task(void *arg);
 //打印任务列表
 void display_task(void *arg);
 //注销当前用户
-void deregister(void *arg);
+bool deregister(void *arg);
 //修改密码
 void change_password(void *arg);
 

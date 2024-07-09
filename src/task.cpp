@@ -153,10 +153,20 @@ bool checkIdFormat(const string id) {
 //检查提醒时间
 void checkRemindTime(const vector<Task> tasks) {
     time_t cur = time(NULL);
+    bool flag = false;
     for (const Task& task : tasks) {
-        if (task.remind_time >= cur - 16 && task.remind_time <= cur + 16) {
+        if (task.remind_time >= cur - 0.2 && task.remind_time <= cur + 0.2) {
+            if (!flag) {
+                cout << "Remind Time is coming!" << endl;
+                displayTaskTitle();
+                cout << "------------------------------------------------------------------------------------------------------------------------------------------" << endl;
+                flag = true;
+            }
             displaySingleTask(task);
         }
+    }
+    if (flag) {
+        cout << "------------------------------------------------------------------------------------------------------------------------------------------" << endl;
     }
 }
 

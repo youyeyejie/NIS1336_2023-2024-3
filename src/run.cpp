@@ -40,7 +40,7 @@ void run(){
             cout<< "Incorrect user name or password. Please check your input.\n";
             exit(-1);
         }
-        cout<< "Login successfully! Welcome "<< current_user.username<<endl;
+        cout<< "Login successfully! Welcome " << current_user.username << "!" << endl;
         break;
 
     case 3://quit
@@ -48,7 +48,7 @@ void run(){
         break;
     
     default:
-        cout<< "Unknown command! Can only accept '1' or '2'.\n";
+        cout<< "Unknown command! Can only accept '1' or '2' or '3'.\n";
         exit(-1);
         break;
     }
@@ -62,12 +62,14 @@ void run(){
     thread_arg.running = true;
 
     //create thread1
+    th_1 = new pthread_t;
     if(pthread_create(th_1, NULL, thread1, &thread_arg)){
         cout<< "Create thread 1 failed.\n";
         exit(-1);
     }
 
     //create thread2
+    th_2 = new pthread_t;
     if(pthread_create(th_2, NULL, thread2, &thread_arg)){
         cout<< "Create thread 2 failed.\n";
         exit(-1);

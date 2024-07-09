@@ -9,14 +9,10 @@ void *thread2(void* arg){
     ThreadInfo* th_2 = (ThreadInfo*)arg;
     pthread_mutex_t* mutex = th_2->mutex;
     User* user = th_2->user;
-    bool running = th_2->running;
+    bool* running = &th_2->running;
     
     //checktask
-    while(1){
-        //check running
-        if(running == false){
-            return NULL;
-        }
+    while(*running){
         //read tasklist
         pthread_mutex_lock(mutex);
         vector<Task> tasklist = loadTaskFromFile(user);
@@ -30,8 +26,8 @@ void *thread2(void* arg){
         saveTask2File(tasklist, user);
         pthread_mutex_unlock(mutex);
 
-        //sleep 30s
-        sleep(30);
+        //sleep 1s
+        sleep(1);
     }
 
     return NULL;
