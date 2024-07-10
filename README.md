@@ -1,7 +1,7 @@
 # NIS1336_2023-2024-3
 
 ## To_do
-1. debug
+1. ~~debug~~
 2. ~~inc/thread1.h~~
 3. ~~src/thread1.cpp~~
 4. ~~src/main.cpp~~
@@ -9,7 +9,7 @@
 6. GUIsrc/图形化界面
 7. ~~build/cmake文件~~
 8. bin/Schedule等可执行程序
-9. test/shell测试程序
+9. ~~test/shell测试程序~~
 10. 设计文档
  
 ## 作业目标
