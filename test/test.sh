@@ -77,3 +77,8 @@ echo "Deregister TestUser1 and TestUser2 successfully."
 
 echo "--------------------------------------------------------------"
 echo "All test cases have been completed successfully."
+
+echo "--------------------------------------------------------------"
+echo "[Task 9] Test the fuction of run."
+echo "Now start to run the program with polling."
+./bin/MySchedule run
