@@ -8,9 +8,9 @@
 5. Windows版本
 6. GUIsrc/图形化界面
 7. ~~build/cmake文件~~
-8. bin/Schedule等可执行程序
+8. ~~bin/Schedule等可执行程序~~
 9. ~~test/shell测试程序~~
-10. 设计文档
+10. ~~设计文档~~
  
 ## 作业目标
 
