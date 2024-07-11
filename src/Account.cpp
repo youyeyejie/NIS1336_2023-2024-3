@@ -316,7 +316,7 @@ bool Account::deleteAccount(const string& input_username, const string& input_pa
 
     // Delete
     deleteUser(user, filename);
-    cout << "Account deleted successfully!" << endl;
+    //cout << "Account deleted successfully!" << endl;
     return true;
 }
 

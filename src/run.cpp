@@ -33,7 +33,9 @@ void run(){
         	    valid=true;
         	}
     	}
-        
+        current_user = account.login(username, password);
+        cout<< "Login successfully! Welcome " << current_user.username << "!" << endl;
+        break;
 
     case 2://login
     	valid=false;

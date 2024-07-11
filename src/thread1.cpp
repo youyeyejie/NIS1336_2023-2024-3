@@ -9,7 +9,7 @@ void *thread1(void * arg){
     sleep(1);
     cout << "-----------------------------------------------" << endl;
     display_help();
-    cout << "-----------------------------------------------" << endl;
+    cout << "-----------------------------------------------" << endl << endl;
 
     //start polling
     do{
@@ -508,7 +508,6 @@ void edit_task(void *arg)
         if (!checkDateFormat(stime))
         {
             cout << "Invalid date format!" << endl;
-            cout << "Please input the new task start time (Format: yyyy-mm-dd/hh:mm:ss) " << QUIT << ": ";
             continue;
         }
 
@@ -516,7 +515,6 @@ void edit_task(void *arg)
         if (convertStringToTime(stime) < time(NULL))
         {
             cout << "Start time cannot be earlier than current time!" << endl;
-            cout << "Please input the new task start time (Format: yyyy-mm-dd/hh:mm:ss) " << QUIT << ": ";
             continue;
         }
 
@@ -559,7 +557,6 @@ void edit_task(void *arg)
         if (!checkDateFormat(rtime))
         {
             cout << "Invalid date format!" << endl;
-            cout << "Please input the new task remind time (Format: yyyy-mm-dd/hh:mm:ss) " << QUIT << ": ";
             continue;
         }
 
@@ -567,7 +564,6 @@ void edit_task(void *arg)
         if (convertStringToTime(rtime) > task.start_time)
         {
             cout << "Remind time cannot be later than start time!" << endl;
-            cout << "Please input the new task remind time (Format: yyyy-mm-dd/hh:mm:ss) " << QUIT << ": ";
             continue;
         }
 
