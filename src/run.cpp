@@ -13,7 +13,7 @@ void run(){
 
     //register or login
     cout<< "Welcome to Task Manager!\n";
-    cout<< "Please select the operation: 1.Register 2.Login 3.Quit\n";
+    cout<< "Please select the operation (type number): 1.Register 2.Login 3.Quit\n";
     scanf("%d", &opt);
     cin.get();
     bool valid;
