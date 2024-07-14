@@ -7,7 +7,7 @@
 ## 2. 小组成员名单及分工
 
 组长：马悦钊
-Linux版本head.h、Account、task、thread1、thread2的编写及debug，run、main的合作编写，多线程运行的实现，Cmakelist和test.sh和设计文档的合作编写。
+Linux版本head.h、Account、task、thread1、thread2的编写及debug，run、main的合作编写，多线程运行的实现，Cmakelist和test.sh的编写，设计文档的合作编写。
 
 组员：刘亦唐
 cli的编写，run、main的合作编写，项目整体的debug，多线程运行的实现，设计文档的合作编写；
