@@ -6,7 +6,6 @@
 //Thread 1
 void *thread1(void * arg);
 
-
 //打印帮助信息
 void display_help();
 //添加任务
