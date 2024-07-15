@@ -26,11 +26,11 @@
 
 using namespace std;
 
-extern string getExePath();
+extern string getRootPath();
 
-const string op = getExePath() + "/Data/User/";
+const string op = getRootPath() + "/Data/User/";
 const string ed = "_tasks.txt";
-const string account_filename = getExePath() + "/Data/Account.txt";
+const string account_filename = getRootPath() + "/Data/Account.txt";
 const string QUIT = "(\"ESC\" to quit)";
 
 //任务优先级:1.高 2.中 3.低

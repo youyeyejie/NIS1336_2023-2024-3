@@ -202,7 +202,7 @@ bool deleteUser(const User& user, const string& Account_File) {
 bool Account::newAccount(const string& input_username, const string& input_pwd)
 {
     //new directory
-    string dir = getExePath() + "/Data";
+    string dir = getRootPath() + "/Data";
     if (access(dir.c_str(), 0) == -1){
     	if (mkdir(dir.c_str(), S_IRWXU) == 0) {  //创建成功
           cout << "Create Data directory successfully." << endl;
@@ -321,17 +321,17 @@ bool Account::deleteAccount(const string& input_username, const string& input_pa
 }
 
 //获取可执行文件所在文件夹路径
-string getExePath() {
+string getRootPath() {
     char buff[1024] = {0};
     readlink("/proc/self/exe", buff, sizeof(buff)-1);
-    string exe_path(buff);
-    size_t pos = exe_path.rfind('/');
+    string root_path(buff);
+    size_t pos = root_path.rfind('/');
     if (pos != string::npos) {
-        exe_path = exe_path.substr(0, pos);
+        root_path = root_path.substr(0, pos);
     }
-    pos = exe_path.rfind('/');
+    pos = root_path.rfind('/');
     if (pos != string::npos) {
-        exe_path = exe_path.substr(0, pos);
+        root_path = root_path.substr(0, pos);
     }
-    return exe_path;
+    return root_path;
 }

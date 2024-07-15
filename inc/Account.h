@@ -27,7 +27,7 @@ private:
 //哈希加密
 string hashString(const string& input);
 //获取可执行文件所在文件夹路径
-string getExePath();
+string getRootPath();
 //检查用户名是否存在
 bool isUserExists(const string& username, const string& Account_File);
 //获取用户信息,成功返回用户信息，失败返回uid为-1的用户信息
