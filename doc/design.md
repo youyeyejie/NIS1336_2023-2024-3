@@ -6,16 +6,15 @@
 
 ## 2. 小组成员名单及分工
 
-组长：马悦钊
+马悦钊：
 Linux版本head.h、Account、task、thread1、thread2的编写及debug，run、main的合作编写，多线程运行的实现，Cmakelist和test.sh的编写，设计文档的合作编写。
 
-组员：刘亦唐
-cli的编写，run、main的合作编写，项目整体的debug，多线程运行的实现，设计文档的合作编写；
+刘亦唐：
+cli的编写，run、main的合作编写，项目整体的debug，多线程运行的实现，设计文档的合作编写。
 
-组员：陈炳安
+>陈炳安：
 Windows版本的改编和debug；
-
-组员：王泽聪
+王泽聪：
 Windows版本的改编和图形化界面的实现。
 
 ## 3. 模块与类的设计
@@ -27,7 +26,7 @@ Windows版本的改编和图形化界面的实现。
 - **用户账户管理模块**：负责用户的注册、登录、密码修改和账户删除。`Account`
 - **任务管理模块**：提供任务的增删改查功能。`task`
 - **命令行接口模块**：解析用户输入的命令，并调用相应的功能。`main` `cli`
-- **多线程模块**：以run命令运行两个线程，线程一以shell方式循环运行，接受用户命令；线程二定期检查任务的提醒时间，并通知用户`run` `thread1``thread2`
+- **多线程模块**：以run命令运行两个线程，线程一以shell方式循环运行，接受用户命令；线程二定期检查任务的提醒时间，并通知用户`run` `thread1` `thread2`
 
 ### 3.2 类设计
 
@@ -89,6 +88,7 @@ graph TB
 ### 5.1 多线程同步
 
 任务管理器使用多线程来提高性能，线程1处理用户交互，线程2负责检查任务提醒。使用互斥锁（mutex）来同步对任务列表的访问，确保数据的一致性。
+每个线程可以访问共享资源，并通过互斥锁来保证数据的正确性。通过多线程并行执行，可以加快程序运行速度，提高系统的效率。
 
 ```cpp {.line-numbers}
 //create thread
@@ -185,7 +185,42 @@ bool checkDateFormat(const string& str) {
 bool checkDateFormat(const string& str);
 //检查id格式
 bool checkIdFormat(const string id);
-//其他验证在对应函数中直接实现，未包装成函数
+//其他验证在对应函数中直接实现，未包装成函数，如：
+string stime;
+valid = false; 
+while (!valid){   
+    cout << "Please input the task start time " << QUIT << ": ";
+    getline(cin, stime);
+    if (stime == "ESC") return;
+    if (stime == ""){
+        newtask.start_time = time(NULL);
+        valid = true;
+        break;
+    }
+    //check if date format is valid
+    if (!checkDateFormat(stime)){
+        cout << "Invalid date format!" << endl;
+        continue;
+    }
+    //check if date is in the past
+    if (convertStringToTime(stime) < time(NULL)){
+        cout << "Start time cannot be earlier than current time!" << endl;
+        continue;
+    }
+    //check if date is exist
+    bool exist = false;
+    for (int i = 0; i < tasklist.size(); i++){
+        if (tasklist[i].start_time == convertStringToTime(stime)){
+            cout << "Task start time already exists!" << endl;
+            exist = true;
+            break;
+        }
+    }
+    if (!exist){
+        newtask.start_time = convertStringToTime(stime);
+        valid = true;
+    } 
+}
 ```
 
 ## 6. 学习心得及建议反馈
@@ -193,7 +228,7 @@ bool checkIdFormat(const string id);
 ### 6.1 学习心得
 
 本次课程项目要求我们基于linux平台使用C++开发一款日程管理软件。
-在这次项目中，我们对命令行处理、图形界面设计、文件读写、多线程编程、文件锁以及合作开发软件的流程有了一定的掌握并且进行了练习，这不仅增加了我们对于linux平台编程的知识和了解，也锻炼了我们的编程能力，更在实践中培养了我们的版本管理意识与技巧。
+在这次项目中，我们对命令行处理、文件读写、多线程编程、文件锁以及合作开发软件的流程有了一定的掌握并且进行了练习，这不仅增加了我们对于linux平台编程的知识和了解，也锻炼了我们的编程能力，更在实践中培养了我们的版本管理意识与技巧。
 
 在项目中，我们深化了C++编程语言的学习，掌握了Linux Bash基本命令，深入了解了编译、链接以及调试等关键概念和工具的使用。通过课上的项目，得到了宝贵的编程实践经验。课程中MakeFile、CMake和Git等工具也让我更好地理解了代码组织、版本控制和团队协作的重要性。
 
