@@ -230,7 +230,8 @@ void addTask(int argc, char * argv[]){
     //add new task to tasklist
     tasklist.push_back(new_task);
     cout << "Add task successfully!" << endl;
-
+    
+        
     //save
     saveTask2File(tasklist, &user);
 }
@@ -472,6 +473,8 @@ void editTask(int argc, char * argv[]){
     //save
     saveTask2File(tasklist, &user);
     cout << "Task " << id << " is successfully modified" << endl;
+    
+    
 }
 
 //注册用户

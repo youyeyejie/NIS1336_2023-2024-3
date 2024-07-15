@@ -155,7 +155,7 @@ void checkRemindTime(const vector<Task> tasks) {
     time_t cur = time(NULL);
     bool flag = false;
     for (const Task& task : tasks) {
-        if (task.remind_time >= cur - 0.2 && task.remind_time <= cur + 0.2) {
+        if (task.remind_time >= cur - 0.5 && task.remind_time <= cur + 0.5) {
             if (!flag) {
                 cout << endl << "Remind Time is coming!" << endl;
                 displayTaskTitle();

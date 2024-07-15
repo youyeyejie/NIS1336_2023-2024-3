@@ -205,12 +205,11 @@ bool Account::newAccount(const string& input_username, const string& input_pwd)
     string dir = getRootPath() + "/Data";
     if (access(dir.c_str(), 0) == -1){
     	if (mkdir(dir.c_str(), S_IRWXU) == 0) {  //创建成功
-            cout << "Create Data directory successfully." << endl;
-        } 
-        else { //创建失败
-            cout << "Fail to create directory." << endl;
-            return false;
-        }
+          cout << "Create Data directory successfully." << endl;
+      } else { //创建失败
+          cout << "Fail to create directory." << endl;
+          return false;
+      }
     }
 
     // open
@@ -240,12 +239,11 @@ bool Account::newAccount(const string& input_username, const string& input_pwd)
     dir += "/User";
     if (access(dir.c_str(), 0) == -1){
     	if (mkdir(dir.c_str(), S_IRWXU) == 0) {  //创建成功
-            cout << "Create User directory successfully." << endl;
-        } 
-        else { //创建失败
-            cout << "Fail to create directory." << endl;
-            return false;
-        }
+          cout << "Create User directory successfully." << endl;
+      } else { //创建失败
+          cout << "Fail to create directory." << endl;
+          return false;
+      }
     }
     string user_file = op + input_username + ed;
     //ofstream userFile(user_file);

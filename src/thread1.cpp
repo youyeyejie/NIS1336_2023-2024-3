@@ -6,10 +6,14 @@ void *thread1(void * arg){
     string command;
     bool stop = false;
 
-    sleep(1);
+    sleep(0.5);
     cout << "-----------------------------------------------" << endl;
     display_help();
-    cout << "-----------------------------------------------" << endl << endl;
+    cout << "-----------------------------------------------" << endl;
+    vector<Task> tasklist;
+    load_task(tasklist, arg);
+    if(!tasklist.empty()) displayTaskById(tasklist);
+    cout<<endl;
 
     //start polling
     do{
@@ -287,7 +291,12 @@ void add_task(void *arg)
 
     //save task list
     save_task(tasklist, arg);
+    displayTaskTitle();
+    cout << "------------------------------------------------------------------------------------------------------------------------------------------" << endl;
+    displaySingleTask(newtask);
+    cout << "------------------------------------------------------------------------------------------------------------------------------------------" << endl;
     cout << "Task added successfully!" << endl;
+    
 }
 
 
@@ -589,7 +598,12 @@ void edit_task(void *arg)
 
     //save task list
     save_task(tasklist, arg);
+    displayTaskTitle();
+    cout << "------------------------------------------------------------------------------------------------------------------------------------------" << endl;
+    displaySingleTask(task);
+    cout << "------------------------------------------------------------------------------------------------------------------------------------------" << endl;
     cout << "Task edited successfully!" << endl;
+    
 }
 
 
