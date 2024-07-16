@@ -7,7 +7,7 @@ void displayHelp(){
     cout << "Usage: " << endl;
     cout << "[path] [command] [options]" << endl;
     cout << "Commands:" << endl;
-    cout << "run/t (run in a shell loop)" << endl;
+    cout << "run\t (run in a shell loop)" << endl;
     cout << "displaytask -u username -p password -k kindOfDisplay(id/starttime/remindtime/priority/category)" << endl;
     cout << "addtask -u username -p password -n name [-o prio] [-c cat] [-s start_time] [-r remind_time] [-d detail]" << endl;
     cout << "deltask -u username -p password -i id" << endl;
