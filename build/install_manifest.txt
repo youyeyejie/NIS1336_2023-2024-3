@@ -1,0 +1,2 @@
+/home/code/Desktop/git/NIS1336_2023-2024-3/bin/MySchedule
+/home/code/Desktop/git/NIS1336_2023-2024-3/lib/libMyLibrary.a

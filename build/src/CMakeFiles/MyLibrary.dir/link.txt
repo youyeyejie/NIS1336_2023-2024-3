@@ -1,0 +1,2 @@
+/usr/bin/ar qc libMyLibrary.a CMakeFiles/MyLibrary.dir/Account.cpp.o CMakeFiles/MyLibrary.dir/cli.cpp.o CMakeFiles/MyLibrary.dir/task.cpp.o CMakeFiles/MyLibrary.dir/run.cpp.o CMakeFiles/MyLibrary.dir/thread1.cpp.o CMakeFiles/MyLibrary.dir/thread2.cpp.o
+/usr/bin/ranlib libMyLibrary.a
