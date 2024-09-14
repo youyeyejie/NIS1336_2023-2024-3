@@ -66,8 +66,7 @@ cmake --install build
     a. 在约定的提醒时间屏幕打印提醒；
 
 9. 以多线程方式运行。在后台周期性检查任务，进行提醒.
-   
- 
+
 ## 命令行参数
 
 1. 程序应具有完整的命令行帮助说明和使用示例。
@@ -76,16 +75,14 @@ cmake --install build
 
     比如：
 
-    $ myschedule  run     
+    $ myschedule  run
 
     $ myschedule  user1 password   addtask  tasknam1….
 
- 
 ## 高级进阶（可选, 加分项）
 
-    以图形界面完成该作业；
+以图形界面完成该作业；
 
- 
 ## 作业提交资料
 
 1. 程序源代码；
