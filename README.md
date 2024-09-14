@@ -12,7 +12,7 @@
 - `test`文件夹存放shell测试程序，可以在任意路径下运行；
 - 如需编译运行，请在根目录终端下运行以下代码；
 
-```
+```cmake
 cmake -B build
 cmake --build build
 cmake --install build
@@ -22,7 +22,7 @@ cmake --install build
 
  使用C++语言开发一个有用而且有趣的日程管理软件，以小组方式完成，每个小组不超过2人。
 
-## 实现如下功能：
+## 实现如下功能
 
 1. 使用命令行界面；
 2. 账户管理：
@@ -75,9 +75,10 @@ cmake --install build
 
     比如：
 
-    $ myschedule  run
-
-    $ myschedule  user1 password   addtask  tasknam1….
+```bash
+    $myschedule run
+    $myschedule user1 password addtask taskname1….
+```
 
 ## 高级进阶（可选, 加分项）
 
